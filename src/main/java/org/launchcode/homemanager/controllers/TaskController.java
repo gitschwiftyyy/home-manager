@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class TaskController {
 
+
+    //May need to be moved to a "IndexControllerClass"
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
 
@@ -18,6 +20,10 @@ public class TaskController {
         return "index";
 
     }
-    
+    @RequestMapping(value = "add", method = RequestMethod.GET)
+    public String addTaskForm(Model model) {
 
+        model.addAttribute("title", "Add Task");
+        return "tasks/add";
+    }
 }

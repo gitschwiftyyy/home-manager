@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
-<head>
+<head th:fragment="head">
     <meta charset="UTF-8"/>
-    <title th:fragment="title" th:text="${title}">Title</title>
+    <title th:text="${title}">Title</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
 </head>
 <body>
-<h1 th:fragment="marquis">Home Manager</h1>
-<h2 th:fragment="heading" th:text="${title}">Heading</h2>
-
+<div th:fragment="header">
+<h1>Home Manager</h1>
+<h2 th:text="${title}">Heading</h2>
+</div>
 </body>
 </html>

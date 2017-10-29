@@ -2,10 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${title}">Title</title>
+    <title th:replace="fragments :: title"></title>
 </head>
 <body>
-<h1 th:text="${title}">Heading</h1>
+<h1 th:replace="fragments :: marquis"></h1>
+<h2 th:replace="fragments :: heading"></h2>
 
 </body>
 </html>

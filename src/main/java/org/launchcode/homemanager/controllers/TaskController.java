@@ -1,8 +1,10 @@
 package org.launchcode.homemanager.controllers;
 
 import org.launchcode.homemanager.models.Task;
+import org.launchcode.homemanager.models.TaskData;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,6 +20,7 @@ public class TaskController {
     public String index(Model model) {
 
         model.addAttribute("title", "Tasks");
+        model.addAttribute("tasks", TaskData.getAll());
         return "index";
 
     }
@@ -30,5 +33,8 @@ public class TaskController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddTaskForm()
+    public String processAddTaskForm(@ModelAttribute Task newTask, Model model) {
+        TaskData.add(newTask);
+        return "redirect:";
+    }
 }

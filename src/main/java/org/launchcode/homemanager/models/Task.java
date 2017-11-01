@@ -5,6 +5,7 @@ package org.launchcode.homemanager.models;
  */
 public class Task {
 
+
     private String name;
     private String description;
     private int frequency;
@@ -45,7 +46,7 @@ public class Task {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getName() {
         return name;
     }

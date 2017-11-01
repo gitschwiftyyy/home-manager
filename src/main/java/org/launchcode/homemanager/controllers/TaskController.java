@@ -1,5 +1,6 @@
 package org.launchcode.homemanager.controllers;
 
+import org.launchcode.homemanager.models.Task;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +22,13 @@ public class TaskController {
 
     }
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String addTaskForm(Model model) {
+    public String displayAddTaskForm(Model model) {
 
+        model.addAttribute("task", new Task());
         model.addAttribute("title", "Add Task");
         return "tasks/add";
     }
+
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public String processAddTaskForm()
 }

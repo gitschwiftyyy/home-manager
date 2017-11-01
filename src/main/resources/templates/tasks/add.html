@@ -7,10 +7,17 @@
 <body>
 <div th:replace="fragments :: header"></div>
 
-<form>
-    <label>Task: <input type="text" name="taskName"/> </label><br/><br/>
-    <label>Description: <input type="text" name="taskDescription"/></label><br/><br/>
-    <label>Frequency: <select name="taskFrequency">
+<form style="max-width:600px" method="post" th:object="${task}">
+    <div class="form-group">
+        <label th:for="name">Task: </label>
+        <input class="form-control" th:field="*{name}"/>
+    </div>
+    <div class="form-group">
+        <label th:for="description">Description: </label>
+        <input class="form-control" th:field="*{description}"/>
+    </div>
+    <label th:for="frequency">Frequency: </label>
+    <select th:field="*{frequency}">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="3">3</option>
@@ -18,7 +25,9 @@
         <option value="5">5</option>
         <option value="6">6</option>
         <option value="7">7</option>
-            </select> </label> Days per week<br/><br/>
+    </select> Days per week <br/><br/>
+
+
     <input type="submit" value="Add Task"/>
 </form>
 </body>

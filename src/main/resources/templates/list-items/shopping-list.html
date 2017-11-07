@@ -7,7 +7,23 @@
 <body>
 <div th:replace="fragments :: header"></div>
 
+<table class="container" style="max-width:600px">
+    <tr>
+        <th>Shopping List</th>
+    </tr>
 
+    <tr th:each="listItem : ${items}">
+        <td th:text="${listItem.content}">Content</td>
+    </tr>
+</table>
+
+<form style="max-width:600px" method="post" th:object="${listItem}">
+    <!--<div class="form-control">-->
+        <label th:for="content">Add Item: </label>
+        <input class="form-control" th:field="*{content}"/>
+    <!--</div>-->
+    <input type="submit" value="Add to List"/>
+</form>
 
 </body>
 </html>

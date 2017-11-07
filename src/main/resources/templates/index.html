@@ -7,6 +7,8 @@
 <body class="container">
 <div th:replace="fragments :: header"></div>
 
+
+ <div class="col-md-6">
 <table class="table" style="max-width:600px">
    <tr>
         <th>Task</th>
@@ -21,7 +23,11 @@
     </tr>
 
 </table>
-<table class="container">
+ </div>
+
+  <div class="col-md-6">
+      <div class="col-md-6"></div>
+<table class="table" style="max-width:200px">
     <tr>
         <th>Shopping List</th>
     </tr>
@@ -30,6 +36,9 @@
         <td th:text="${listItem.content}">Content</td>
     </tr>
 </table>
+<div align="right"><a href="shopping-list">Add Item</a></div>
+  </div>
+
 
 </body>
 </html>

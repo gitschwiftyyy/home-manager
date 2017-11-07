@@ -9,21 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * Created by schwifty on 10/28/17.
+ * Created by schwifty on 11/6/17.
  */
 @Controller
 public class TaskController {
 
-
-    //May need to be moved to a "IndexControllerClass"
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
-
-        model.addAttribute("title", "Tasks");
-        model.addAttribute("tasks", TaskData.getAll());
-        return "index";
-
-    }
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model) {
 

@@ -7,7 +7,7 @@
 <body class="container">
 <div th:replace="fragments :: header"></div>
 
-<table class="table">
+<table class="table" style="max-width:600px">
    <tr>
         <th>Task</th>
         <th>Description</th>
@@ -20,6 +20,15 @@
         <td th:text="${task.frequency} + ' times per week'">Task Frequency</td>
     </tr>
 
+</table>
+<table class="container">
+    <tr>
+        <th>Shopping List</th>
+    </tr>
+
+    <tr th:each="listItem : ${shoppingList}">
+        <td th:text="${listItem.content}">Content</td>
+    </tr>
 </table>
 
 </body>

@@ -18,11 +18,12 @@
 </table>
 
 <form style="max-width:600px" method="post" th:object="${listItem}">
-    <!--<div class="form-control">-->
+   <div class="form-group">
         <label th:for="content">Add Item: </label>
         <input class="form-control" th:field="*{content}"/>
-    <!--</div>-->
+   </div>
     <input type="submit" value="Add to List"/>
+
 </form>
 
 </body>

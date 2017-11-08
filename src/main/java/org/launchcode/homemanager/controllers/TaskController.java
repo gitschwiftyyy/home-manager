@@ -1,7 +1,8 @@
 package org.launchcode.homemanager.controllers;
 
 import org.launchcode.homemanager.models.Task;
-import org.launchcode.homemanager.models.TaskData;
+import org.launchcode.homemanager.models.data.TaskDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class TaskController {
 
+    @Autowired
+    private TaskDao taskDao;
+
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model) {
 
@@ -24,7 +28,7 @@ public class TaskController {
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processAddTaskForm(@ModelAttribute Task newTask, Model model) {
-        TaskData.add(newTask);
+        taskDao.save(newTask);
         return "redirect:";
     }
 }

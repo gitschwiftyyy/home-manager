@@ -1,8 +1,17 @@
 package org.launchcode.homemanager.models;
 
+
+
+
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Created by schwifty on 10/30/17.
  */
+@Entity
 public class Task {
 
 
@@ -11,11 +20,13 @@ public class Task {
     private int frequency;
     private boolean isComplete = false;
     private int timesCompleted = 0;
+
+    @Id
+    @GeneratedValue
     private int id;
-    private static int nextId = 1;
+
 
     public Task(String name, String description, int frequency, boolean isComplete, int timesCompleted) {
-        this();
         this.name = name;
         this.description = description;
         this.frequency = frequency;
@@ -24,10 +35,7 @@ public class Task {
 
     }
 
-    public Task() {
-        this.id = nextId;
-        nextId++;
-    }
+    public Task() {}
 
 
 
@@ -43,9 +51,6 @@ public class Task {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

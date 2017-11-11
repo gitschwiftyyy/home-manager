@@ -8,12 +8,13 @@
 <div th:replace="fragments :: header"></div>
 
 <h3>Messages</h3>
-<table class="table">
+<div class="well" style="max-width:600px">
+<table class="table" style="max-width:600px">
     <tr th:each="message : ${messages}">
         <td th:text="${message.message}">Message</td>
     </tr>
 </table>
-
+</div>
  <div class="col-md-6">
 <table class="table" style="max-width:600px">
    <tr>

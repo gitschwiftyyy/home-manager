@@ -1,5 +1,6 @@
 package org.launchcode.homemanager.controllers;
 
+import org.launchcode.homemanager.models.ListItem;
 import org.launchcode.homemanager.models.data.ListItemDao;
 import org.launchcode.homemanager.models.data.MessageDao;
 import org.launchcode.homemanager.models.data.TaskDao;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Created by schwifty on 10/28/17.
@@ -32,6 +34,15 @@ public class IndexController {
         model.addAttribute("shoppingList", listItemDao.findAll());
         model.addAttribute("messages", messageDao.findAll());
         return "index";
+
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public String deleteListItem(@RequestParam int itemId) {
+        ListItem itemToBeDeleted = listItemDao.findOne(itemId);
+        listItemDao.delete(itemToBeDeleted);
+
+        return "redirect:";
 
     }
 

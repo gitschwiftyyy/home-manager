@@ -41,6 +41,12 @@
 
     <tr th:each="listItem : ${shoppingList}">
         <td th:text="${listItem.content}">Content</td>
+        <td>
+            <form method="post">
+                <input type="submit" value="Bought it!"/>
+                <input type="hidden" name="itemId" th:value="${listItem.id}"/>
+            </form>
+        </td>
     </tr>
 </table>
 <div align="right"><a href="shopping-list">Add Item</a></div>

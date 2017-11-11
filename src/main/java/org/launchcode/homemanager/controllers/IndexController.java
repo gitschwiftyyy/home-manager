@@ -1,6 +1,6 @@
 package org.launchcode.homemanager.controllers;
 
-import org.launchcode.homemanager.models.ListItemData;
+import org.launchcode.homemanager.models.data.ListItemDao;
 import org.launchcode.homemanager.models.data.TaskDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,13 +17,15 @@ public class IndexController {
     @Autowired
     private TaskDao taskDao;
 
-    //May need to be moved to a "IndexControllerClass"
+    @Autowired
+    private ListItemDao listItemDao;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
 
         model.addAttribute("title", "Tasks");
         model.addAttribute("tasks", taskDao.findAll());
-        model.addAttribute("shoppingList", ListItemData.getAll());
+        model.addAttribute("shoppingList", listItemDao.findAll());
         return "index";
 
     }

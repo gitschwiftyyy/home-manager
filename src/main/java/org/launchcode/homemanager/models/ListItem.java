@@ -1,23 +1,27 @@
 package org.launchcode.homemanager.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
 /**
  * Created by schwifty on 11/6/17.
  */
+@Entity
 public class ListItem {
 
     private String content;
+
+    @Id
+    @GeneratedValue
     private int id;
-    private static int nextId = 1;
+
 
     public ListItem(String content) {
-        this();
         this.content = content;
     }
 
-    public ListItem() {
-        this.id = nextId;
-        nextId++;
-    }
+    public ListItem() {}
 
 
 
@@ -33,7 +37,4 @@ public class ListItem {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }

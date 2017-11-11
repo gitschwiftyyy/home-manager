@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by schwifty on 11/6/17.
  */
 @Controller
+@RequestMapping(value = "shopping-list")
 public class ShoppingListController {
 
     @Autowired
     private ListItemDao listItemDao;
 
-    @RequestMapping(value = "shopping-list", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayShoppingList (Model model) {
 
         model.addAttribute("items", listItemDao.findAll());
@@ -28,7 +29,7 @@ public class ShoppingListController {
         return "list-items/shopping-list";
     }
 
-    @RequestMapping(value = "shopping-list", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public String addListItem(@ModelAttribute ListItem newListItem) {
         listItemDao.save(newListItem);
         return "redirect:";

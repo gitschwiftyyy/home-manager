@@ -4,16 +4,22 @@
     <meta charset="UTF-8"/>
     <title></title>
 </head>
-<body>
+<body class="container">
 <div th:replace="fragments :: header"></div>
 
-<table class="container" style="max-width:600px">
+<table class="table" style="max-width:600px">
     <tr>
         <th>Shopping List</th>
     </tr>
 
     <tr th:each="listItem : ${items}">
         <td th:text="${listItem.content}">Content</td>
+        <td>
+            <form method="post">
+            <input type="submit" name="delete" value="Bought it!"/>
+            <input type="hidden" name="itemId" th:value="${listItem.id}"/>
+        </form>
+        </td>
     </tr>
 </table>
 
@@ -22,7 +28,9 @@
         <label th:for="content">Add Item: </label>
         <input class="form-control" th:field="*{content}"/>
    </div>
-    <input type="submit" value="Add to List"/>
+
+    <input type="submit" name="add" value="Add to List"/>
+
 
 </form>
 

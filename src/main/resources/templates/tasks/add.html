@@ -7,7 +7,20 @@
 <body>
 <div th:replace="fragments :: header"></div>
 
-<form style="max-width:600px" method="post" th:object="${task}">
+<table class="table" style="max-width:600px">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Frequency</th>
+    </tr>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.name}">Name</td>
+        <td th:text="${task.description}">Description</td>
+        <td th:text="${task.frequency} + ' times per week'">Frequency</td>
+    </tr>
+</table>
+<div class="d-flex">
+<form style="max-width:600px" method="post" th:object="${task}" class="border-class">
     <div class="form-group">
         <label th:for="name">Task: </label>
         <input class="form-control" th:field="*{name}"/>
@@ -30,5 +43,6 @@
 
     <input type="submit" value="Add Task"/>
 </form>
+</div>
 </body>
 </html>

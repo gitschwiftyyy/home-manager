@@ -13,22 +13,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by schwifty on 11/6/17.
  */
 @Controller
+@RequestMapping(value = "task")
 public class TaskController {
 
     @Autowired
     private TaskDao taskDao;
 
-    @RequestMapping(value = "add", method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model) {
 
         model.addAttribute("task", new Task());
+        model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("title", "Add Task");
         return "tasks/add";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST)
     public String processAddTaskForm(@ModelAttribute Task newTask, Model model) {
         taskDao.save(newTask);
-        return "redirect:";
+        return "redirect:/task";
     }
 }

@@ -12,13 +12,14 @@
         <td th:text="${message.message}">Message</td>
     </tr>
 </table>
-
-<form style="max-width:600px" method="post">
+<div class="d-flex">
+<form style="max-width:600px" method="post" class="border-class">
     <div class="form-group">
     <input class="form-control" type="text" name="message"/>
     </div>
     <input type="submit" value="Post Message"/>
 </form>
+</div>
 
 </body>
 </html>

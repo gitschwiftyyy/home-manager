@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body class="container">
+<div th:replace="fragments :: header"></div>
+
+<h3>Messages</h3>
+<div class="well" style="max-width:600px">
+<table class="table" style="max-width:600px">
+    <tr th:each="message : ${messages}">
+        <td th:text="${message.message}">Message</td>
+    </tr>
+</table>
+</div>
+ <div class="col-md-6">
+<table class="table" style="max-width:600px">
+   <tr>
+        <th>Task</th>
+        <th>Description</th>
+        <th>Frequency</th>
+   </tr>
+
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.name}">Task Name</td>
+        <td th:text="${task.description}">Task Description</td>
+        <td th:text="${task.frequency} + ' times per week'">Task Frequency</td>
+    </tr>
+
+</table>
+ </div>
+
+  <div class="col-md-6">
+      <div class="col-md-6"></div>
+<table class="table" style="max-width:200px">
+    <tr>
+        <th>Shopping List</th>
+    </tr>
+
+    <tr th:each="listItem : ${shoppingList}">
+        <td th:text="${listItem.content}">Content</td>
+        <td>
+            <form method="post">
+                <input type="submit" value="Bought it!"/>
+                <input type="hidden" name="itemId" th:value="${listItem.id}"/>
+            </form>
+        </td>
+    </tr>
+</table>
+<div align="right"><a href="shopping-list">Add Item</a></div>
+  </div>
+
+
+</body>
+</html>

@@ -15,16 +15,17 @@ public class User {
     private int id;
 
     private String name;
-    private String password;
+    private String passwordHash;
     private String email;
 
-    public User(String name, String password, String email) {
+    public User(String name, String passwordHash, String email) {
         this.name = name;
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.email = email;
     }
 
     public User(){}
+
 
     public String getName() {
         return name;
@@ -34,12 +35,12 @@ public class User {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getEmail() {

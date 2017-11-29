@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:fragment="head">
+    <meta charset="UTF-8"/>
+    <title th:text="${title}">Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script type="text/javascript" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"/>
+    <style>
+        .border-class {
+        border:thin black solid;
+        margin:20px;
+        padding:20px;
+        border-radius:20px;
+        }
+    </style>
+</head>
+<body class="container">
+<div th:fragment="header">
+<h1>Home Manager&#8482;</h1>
+    <nav>
+        <a href="/">Dashboard</a> |
+        <a href="/task">Tasks</a> |
+        <a href="/shopping-list">Shopping List</a> |
+        <a href="/messages">Messages</a>
+    </nav>
+<h2 th:text="${title}">Heading</h2>
+</div>
+</body>
+</html>

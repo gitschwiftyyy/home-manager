@@ -6,4 +6,7 @@ Tired of trying to divy up the chores with your less-than-tidy roommates? Want t
 * Maintain a running shopping list of items that are needed
 * Post importatnt messages that your household needs to know
 * Enter bills and expenses, and see how much you have paid, and how much you owe
+<<<<<<< HEAD
 
+=======
+>>>>>>> b284868322958cee3a01121977975c9038226b7f

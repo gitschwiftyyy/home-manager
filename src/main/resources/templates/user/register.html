@@ -10,22 +10,23 @@
     <form style="max-width:600px" method="post" class="border-class">
         <div class="form-group">
             <label th:for="username">Username: </label>
-            <input type="text" class="form-control" name="username"/>
+            <input type="text" class="form-control" name="username" th:value="${username}"/>
             <span th:text="${usernameError}" class="error"></span>
         </div>
         <div class="from-group">
             <label th:for="password">Password: </label>
-            <input type="password" class="form-control" name="password"/>
+            <input type="password" class="form-control" name="password" th:value="${password}"/>
             <span th:text="${passwordError}" class="error"></span>
         </div>
 
         <div class="form-group">
             <label th:for="confirmPassword">Confirm Password: </label>
-            <input type="password" class="form-control" name="confirmPassword"/>
+            <input type="password" class="form-control" name="confirmPassword" th:value="${confirmPassword}"/>
         </div>
         <div class="form-group">
             <label th:for="email">Email: </label>
-            <input type="text" class="form-control" name="email"/>
+            <input type="text" class="form-control" name="email" th:value="${email}"/>
+            <span th:text="${emailError}" class="error"></span>
         </div>
         <input type="submit" value="Register!"/>
     </form>

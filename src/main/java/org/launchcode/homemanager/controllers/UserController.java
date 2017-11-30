@@ -31,12 +31,46 @@ public class UserController {
         return "user/login";
     }
 
-    //TODO: validate entered login info
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String processLogin(@RequestParam String name, @RequestParam String password) {
+    public String processLogin(@RequestParam String username,
+                               @RequestParam String password,
+                               Model model) {
 
-        return "redirect:";
+        boolean usernameExists = false;
+        boolean passwordCorrect = false;
+        int userId;
+
+        String usernameError = "";
+        String passwordError = "";
+
+        String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        for (User user : userDao.findAll()) {
+            if (username.equals(user.getName())) {
+                usernameExists = true;
+                userId = user.getId();
+                User thisUser = userDao.findOne(userId);
+                if (BCrypt.checkpw(password, thisUser.getPasswordHash())) {
+                    passwordCorrect = true;
+                } else {
+                    passwordError = "Incorrect Password";
+                }
+            } else {
+                usernameError = "Invalid Username";
+            }
+        }
+
+        if (usernameExists && passwordCorrect) {
+            return "redirect:/"; //TODO: add cookies
+        } else {
+            model.addAttribute("usernameError", usernameError);
+            model.addAttribute("passwordError", passwordError);
+            model.addAttribute("username", username);
+            model.addAttribute("password", password);
+            return "user/login";
+        }
+
     }
 
     @RequestMapping(value = "register", method = RequestMethod.GET)

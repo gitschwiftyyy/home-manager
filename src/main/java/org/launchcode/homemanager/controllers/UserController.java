@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @Controller
 @RequestMapping(value = "user")
 public class UserController {
@@ -35,8 +38,10 @@ public class UserController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public String processLogin(@RequestParam String username,
                                @RequestParam String password,
-                               Model model) {
+                               Model model,
+                               HttpServletResponse response) {
 
+        User thisUser = null;
         boolean usernameExists = false;
         boolean passwordCorrect = false;
         int userId;
@@ -50,7 +55,7 @@ public class UserController {
             if (username.equals(user.getName())) {
                 usernameExists = true;
                 userId = user.getId();
-                User thisUser = userDao.findOne(userId);
+                thisUser = userDao.findOne(userId);
                 if (BCrypt.checkpw(password, thisUser.getPasswordHash())) {
                     passwordCorrect = true;
                 } else {
@@ -62,7 +67,13 @@ public class UserController {
         }
 
         if (usernameExists && passwordCorrect) {
-            return "redirect:/"; //TODO: add cookies
+            String cookieValueString = Integer.toString(thisUser.getId());
+            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
+            loggedInCookie.setMaxAge(24*60*60);
+            response.addCookie(loggedInCookie);
+
+            return "redirect:/"; //TODO: add cookies (done?)
+
         } else {
             model.addAttribute("usernameError", usernameError);
             model.addAttribute("passwordError", passwordError);

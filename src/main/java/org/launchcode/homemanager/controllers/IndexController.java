@@ -1,15 +1,23 @@
 package org.launchcode.homemanager.controllers;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.launchcode.homemanager.models.ListItem;
+import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.ListItemDao;
 import org.launchcode.homemanager.models.data.MessageDao;
 import org.launchcode.homemanager.models.data.TaskDao;
+import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Array;
 
 /**
  * Created by schwifty on 10/28/17.
@@ -26,13 +34,28 @@ public class IndexController {
     @Autowired
     private MessageDao messageDao;
 
+    @Autowired
+    private UserDao userDao;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(Model model,
+                        HttpServletRequest request,
+                        HttpServletResponse response,
+                        @CookieValue(value = "loggedInCookie") String cookieValue ) {
+        int userId = Integer.parseInt(cookieValue);
+        User loggedInUser = userDao.findOne(userId);
+
+
+        String cookieValueString = Integer.toString(userId);
+        Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
+        loggedInCookie.setMaxAge(24*60*60);
+        response.addCookie(loggedInCookie);
 
         model.addAttribute("title", "Tasks");
         model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("shoppingList", listItemDao.findAll());
         model.addAttribute("messages", messageDao.findAll());
+        model.addAttribute("username", loggedInUser.getName());
         return "index";
 
     }

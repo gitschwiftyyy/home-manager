@@ -5,6 +5,7 @@ import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 @Controller
 @RequestMapping(value = "user")
 public class UserController {
+
+    public static Cookie loggedInCookie;
 
     @Autowired
     private UserDao userDao;
@@ -72,7 +75,7 @@ public class UserController {
             loggedInCookie.setMaxAge(24*60*60);
             response.addCookie(loggedInCookie);
 
-            return "redirect:/"; //TODO: add cookies (done?)
+            return "redirect:/user/welcome"; //TODO: add cookies (done?)
 
         } else {
             model.addAttribute("usernameError", usernameError);
@@ -156,5 +159,15 @@ public class UserController {
             return "user/register";
         }
 
+    }
+    @RequestMapping(value = "welcome", method = RequestMethod.GET)
+    String displayWelcome (Model model,
+                           @CookieValue(value = "loggedInCookie")
+                                   String cookieValue) {
+        int userId = Integer.parseInt(cookieValue);
+        User thisUser = userDao.findOne(userId);
+        model.addAttribute("usernameGreeting","Welcome, " + thisUser.getName() + "!");
+
+        return "user/welcome";
     }
 }

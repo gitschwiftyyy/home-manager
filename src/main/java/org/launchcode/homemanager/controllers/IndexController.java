@@ -23,7 +23,7 @@ import java.lang.reflect.Array;
  * Created by schwifty on 10/28/17.
  */
 @Controller
-public class IndexController {
+public class IndexController extends MainController {
 
     @Autowired
     private TaskDao taskDao;
@@ -40,18 +40,13 @@ public class IndexController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model,
                         HttpServletRequest request,
-                        HttpServletResponse response,
-                        @CookieValue(value = "loggedInCookie") String cookieValue ) {
-        int userId = Integer.parseInt(cookieValue);
+                        HttpServletResponse response) {
+        Cookie loggedInCookie = IndexController.getLoggedInUser();
+        int userId = Integer.parseInt(loggedInCookie.getValue());
         User loggedInUser = userDao.findOne(userId);
 
 
-        String cookieValueString = Integer.toString(userId);
-        Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
-        loggedInCookie.setMaxAge(24*60*60);
-        response.addCookie(loggedInCookie);
-
-        model.addAttribute("title", "Tasks");
+        model.addAttribute("title", "Dashboard");
         model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("shoppingList", listItemDao.findAll());
         model.addAttribute("messages", messageDao.findAll());

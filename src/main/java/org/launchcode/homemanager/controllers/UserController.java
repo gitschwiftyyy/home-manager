@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "user")
-public class UserController {
+public class UserController extends MainController {
 
     public static Cookie loggedInCookie;
 
@@ -73,6 +73,7 @@ public class UserController {
             String cookieValueString = Integer.toString(thisUser.getId());
             Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
             loggedInCookie.setMaxAge(24*60*60);
+            UserController.setLoggedInUser(loggedInCookie);
             response.addCookie(loggedInCookie);
 
             return "redirect:/user/welcome"; //TODO: add cookies (done?)

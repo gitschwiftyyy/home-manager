@@ -29,6 +29,10 @@ public class MessageController extends MainController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayMessages(Model model,
                                   HttpServletResponse response) {
+        if (MessageController.getLoggedInUser() == null) {
+            return "redirect:/user/login";
+        }
+
         model.addAttribute("title", "Message Board");
         model.addAttribute("messages", messageDao.findAll());
         Cookie loggedInCookie = MessageController.getLoggedInUser();
@@ -41,7 +45,7 @@ public class MessageController extends MainController {
     //For some inexplicable reason, this handler REFUSED to work with model binding,
     //so I had to make it work the old-fashioned way. Idk it works now, so I've stopped
     //questioning it for the time being
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST, params = {"postMessage"})
     public String processMessages(@RequestParam String message,
                                   @CookieValue(value = "loggedInCookie") String loggedInUserId) {
         int userId = Integer.parseInt(loggedInUserId);
@@ -52,5 +56,14 @@ public class MessageController extends MainController {
         messageDao.save(newMessage);
 
         return "redirect:";
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
+    public String logout(HttpServletResponse response) {
+        MessageController.setLoggedInUser(null);
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
     }
 }

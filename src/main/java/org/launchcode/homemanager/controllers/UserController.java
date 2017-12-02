@@ -24,7 +24,11 @@ public class UserController extends MainController {
     private UserDao userDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
+    public String index(Model model,
+                        HttpServletResponse response) {
+        UserController.setLoggedInUser(null);
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        response.addCookie(logoutCookie);
         model.addAttribute("title", "User");
 
         return "user/index";

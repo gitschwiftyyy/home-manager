@@ -5,7 +5,8 @@
     <title></title>
 </head>
 <body class="container">
-
+<div class="col-md-3"></div>
+<div class="col-md-6">
 <div class="d-flex">
 
     <form style="max-width:600px" method="post" class="border-class">
@@ -20,8 +21,10 @@
             <input class="form-control" type="password" name="password" th:value="${password}"/>
             <span th:text="${passwordError}" class="error"></span>
         </div>
+        <span style="text-align:center"><a href="/user/register">Don't have an account? Sign up here!</a></span><br/>
         <input type="submit" value="Log In"/>
     </form>
+</div>
 </div>
 
 </body>

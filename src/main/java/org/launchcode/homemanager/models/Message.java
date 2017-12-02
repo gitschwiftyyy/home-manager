@@ -1,8 +1,6 @@
 package org.launchcode.homemanager.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by schwifty on 11/10/17.
@@ -11,6 +9,9 @@ import javax.persistence.Id;
 public class Message {
 
     private String message;
+
+    @ManyToOne
+    private User author;
 
     @Id
     @GeneratedValue
@@ -21,6 +22,14 @@ public class Message {
     }
 
     public Message() {}
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
 
     public String getMessage() {
         return message;
@@ -33,6 +42,7 @@ public class Message {
     public int getId() {
         return id;
     }
+
 
 
 }

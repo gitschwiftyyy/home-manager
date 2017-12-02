@@ -1,30 +1,38 @@
 package org.launchcode.homemanager.controllers;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.launchcode.homemanager.models.Message;
+import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.MessageDao;
+import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by schwifty on 11/10/17.
  */
 @Controller
 @RequestMapping(value = "messages")
-public class MessageController {
+public class MessageController extends MainController {
 
     @Autowired
     private MessageDao messageDao;
 
+    @Autowired
+    private UserDao userDao;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String displayMessages(Model model) {
+    public String displayMessages(Model model,
+                                  HttpServletResponse response) {
         model.addAttribute("title", "Message Board");
-//        model.addAttribute("message", new Message());
         model.addAttribute("messages", messageDao.findAll());
+        Cookie loggedInCookie = MessageController.getLoggedInUser();
+        response.addCookie(loggedInCookie);
 
         return "messages/messages";
     }
@@ -34,8 +42,12 @@ public class MessageController {
     //so I had to make it work the old-fashioned way. Idk it works now, so I've stopped
     //questioning it for the time being
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public String processMessages(@RequestParam String message ) {
+    public String processMessages(@RequestParam String message,
+                                  @CookieValue(value = "loggedInCookie") String loggedInUserId) {
+        int userId = Integer.parseInt(loggedInUserId);
+        User thisUser = userDao.findOne(userId);
         Message newMessage = new Message(message);
+        newMessage.setAuthor(thisUser);
 
         messageDao.save(newMessage);
 

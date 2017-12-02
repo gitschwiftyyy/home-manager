@@ -10,6 +10,7 @@
 <table class="table">
     <tr th:each="message : ${messages}">
         <td th:text="${message.message}">Message</td>
+        <td th:text="${message.author.name}">Author</td>
     </tr>
 </table>
 <div class="d-flex">

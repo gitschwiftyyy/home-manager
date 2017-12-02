@@ -1,8 +1,8 @@
 package org.launchcode.homemanager.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwifty on 11/13/17.
@@ -13,6 +13,10 @@ public class User {
     @Id
     @GeneratedValue
     private int id;
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<Message> messages = new ArrayList<>();
 
     private String name;
     private String passwordHash;
@@ -53,5 +57,13 @@ public class User {
 
     public int getId() {
         return id;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 }

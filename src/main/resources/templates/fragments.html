@@ -19,6 +19,9 @@
         body {
         font-family: sans-serif;
         }
+        .loginHeader {
+        text-align: center;
+        }
     </style>
 </head>
 <body class="container">
@@ -30,6 +33,12 @@
         <a href="/shopping-list">Shopping List</a> |
         <a href="/messages">Messages</a>
     </nav>
+    <div class="pull-right">
+        <h3 th:text="${user}">Welcome, User</h3>
+        <form method="post">
+            <input type="submit" value="Log Out" name="logout"/>
+        </form>
+    </div>
 <h2 th:text="${title}">Heading</h2>
 </div>
 </body>

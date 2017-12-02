@@ -41,7 +41,11 @@ public class IndexController extends MainController {
     public String index(Model model,
                         HttpServletRequest request,
                         HttpServletResponse response) {
+        if (IndexController.getLoggedInUser() == null) {
+            return "redirect:/user/login";
+        }
         Cookie loggedInCookie = IndexController.getLoggedInUser();
+        response.addCookie(loggedInCookie);
         int userId = Integer.parseInt(loggedInCookie.getValue());
         User loggedInUser = userDao.findOne(userId);
 
@@ -50,18 +54,27 @@ public class IndexController extends MainController {
         model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("shoppingList", listItemDao.findAll());
         model.addAttribute("messages", messageDao.findAll());
-        model.addAttribute("username", loggedInUser.getName());
+        model.addAttribute("user", "Welcome, " + loggedInUser.getName());
         return "index";
 
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "", method = RequestMethod.POST, params = {"deleteListItem"})
     public String deleteListItem(@RequestParam int itemId) {
         ListItem itemToBeDeleted = listItemDao.findOne(itemId);
         listItemDao.delete(itemToBeDeleted);
 
         return "redirect:";
 
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
+    public String logout(HttpServletResponse response) {
+        IndexController.setLoggedInUser(null);
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
     }
 
 }

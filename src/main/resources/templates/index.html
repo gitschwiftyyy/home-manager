@@ -6,7 +6,6 @@
 </head>
 <body class="container">
 <div th:replace="fragments :: header"></div>
-<h1 th:text="${username}"></h1>
 <h3>Messages</h3>
 <div class="well" style="max-width:600px">
 <table class="table" style="max-width:600px">
@@ -45,7 +44,7 @@
         <td th:text="${listItem.content}">Content</td>
         <td>
             <form method="post">
-                <input type="submit" value="Bought it!"/>
+                <input type="submit" name="deleteListItem" value="Bought it!"/>
                 <input type="hidden" name="itemId" th:value="${listItem.id}"/>
             </form>
         </td>

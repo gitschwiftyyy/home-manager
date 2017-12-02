@@ -31,8 +31,11 @@ public class UserController extends MainController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String displayLogin(Model model) {
+    public String displayLogin(Model model,
+                               HttpServletResponse response) {
         model.addAttribute("title", "Login");
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        response.addCookie(logoutCookie);
 
         return "user/login";
     }
@@ -76,7 +79,7 @@ public class UserController extends MainController {
             UserController.setLoggedInUser(loggedInCookie);
             response.addCookie(loggedInCookie);
 
-            return "redirect:/user/welcome"; //TODO: add cookies (done?)
+            return "redirect:/"; //TODO: add cookies (done?)
 
         } else {
             model.addAttribute("usernameError", usernameError);

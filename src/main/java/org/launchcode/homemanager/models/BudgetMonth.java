@@ -14,20 +14,17 @@ public class BudgetMonth {
     @GeneratedValue
     private int id;
 
-    private int month;
-    private double rent;
-    private double electric;
-    private double gas;
-    private double internet;
-    private double etc;
+    private Integer month;
+    private Integer year;
+    private double rent = 0.0;
+    private double electric = 0.0;
+    private double gas = 0.0;
+    private double internet = 0.0;
+    private double etc = 0.0;
 
-    public BudgetMonth(int month, double rent, double electric, double gas, double internet, double etc) {
+    public BudgetMonth(Integer month, Integer year) {
         this.month = month;
-        this.rent = rent;
-        this.electric = electric;
-        this.gas = gas;
-        this.internet = internet;
-        this.etc = etc;
+        this.year = year;
     }
 
     public BudgetMonth() {}
@@ -38,7 +35,7 @@ public class BudgetMonth {
         return thisTotal;
     }
 
-    public static String monthName(int month){
+    public static String monthName(Integer month){
         String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
         return monthNames[month];
     }
@@ -50,12 +47,20 @@ public class BudgetMonth {
         return whatEachOwes;
     }
 
-    public int getMonth() {
+    public Integer getMonth() {
         return month;
     }
 
-    public void setMonth(int month) {
+    public void setMonth(Integer month) {
         this.month = month;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
     public double getRent() {

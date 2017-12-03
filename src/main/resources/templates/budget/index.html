@@ -6,7 +6,40 @@
 </head>
 <body class="container">
 <div th:replace="fragments :: header"></div>
-<h1 th:text="${year}">Year</h1>
+<table class="table" style="max-width:600px">
+    <tr>
+        <th>Utility</th>
+        <th>Amount</th>
+    </tr>
+    <tr>
+        <td>Rent</td>
+        <td th:text="${rent}">Rent</td>
+    </tr>
+    <tr>
+        <td>Electric</td>
+        <td th:text="${electric}">Electric</td>
+    </tr>
+    <tr>
+        <td>Gas</td>
+        <td th:text="${gas}">Gas</td>
+    </tr>
+    <tr>
+        <td>Internet</td>
+        <td th:text="${internet}">Internet</td>
+    </tr>
+    <tr>
+        <td>Etc.</td>
+        <td th:text="${etc}">Etc</td>
+    </tr>
+    <tr>
+        <td>Total</td>
+        <td th:text="${total}">Total</td>
+    </tr>
+    <tr>
+        <td>Per Person</td>
+        <td th:text="${perPerson}">Per Person</td>
+    </tr>
+</table>
 
 
 

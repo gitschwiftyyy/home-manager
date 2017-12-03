@@ -16,11 +16,11 @@ public class BudgetMonth {
 
     private Integer month;
     private Integer year;
-    private double rent = 0.0;
-    private double electric = 0.0;
-    private double gas = 0.0;
-    private double internet = 0.0;
-    private double etc = 0.0;
+    private Double rent = 0.0;
+    private Double electric = 0.0;
+    private Double gas = 0.0;
+    private Double internet = 0.0;
+    private Double etc = 0.0;
 
     public BudgetMonth(Integer month, Integer year) {
         this.month = month;
@@ -29,8 +29,8 @@ public class BudgetMonth {
 
     public BudgetMonth() {}
 
-    public double total() {
-        double thisTotal;
+    public Double total() {
+        Double thisTotal;
         thisTotal = rent + electric + gas + internet + etc;
         return thisTotal;
     }
@@ -42,8 +42,8 @@ public class BudgetMonth {
 
 
 
-    public double eachOwes(int numberOfUsers) {
-        double whatEachOwes = total() / numberOfUsers;
+    public Double eachOwes(int numberOfUsers) {
+        Double whatEachOwes = total() / numberOfUsers;
         return whatEachOwes;
     }
 
@@ -63,19 +63,19 @@ public class BudgetMonth {
         this.year = year;
     }
 
-    public double getRent() {
+    public Double getRent() {
         return rent;
     }
 
-    public void setRent(double rent) {
+    public void setRent(Double rent) {
         this.rent = rent;
     }
 
-    public double getElectric() {
+    public Double getElectric() {
         return electric;
     }
 
-    public void setElectric(double electric) {
+    public void setElectric(Double electric) {
         this.electric = electric;
     }
 
@@ -83,23 +83,23 @@ public class BudgetMonth {
         return gas;
     }
 
-    public void setGas(double gas) {
+    public void setGas(Double gas) {
         this.gas = gas;
     }
 
-    public double getInternet() {
+    public Double getInternet() {
         return internet;
     }
 
-    public void setInternet(double internet) {
+    public void setInternet(Double internet) {
         this.internet = internet;
     }
 
-    public double getEtc() {
+    public Double getEtc() {
         return etc;
     }
 
-    public void setEtc(double etc) {
+    public void setEtc(Double etc) {
         this.etc = etc;
     }
 

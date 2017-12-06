@@ -7,8 +7,7 @@ import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +29,8 @@ public class BudgetMonthController extends MainController {
 
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String displayBudget(Model model, HttpServletResponse response) {
+    public String displayBudget(Model model,
+                                HttpServletResponse response) {
         if (BudgetMonthController.getLoggedInUser() == null) {
             return "redirect:/user/login";
         }
@@ -65,12 +65,18 @@ public class BudgetMonthController extends MainController {
             budgetMonthDao.save(thisBudgetMonth);
         }
 
+        int thisBudgetMonthId = thisBudgetMonth.getId();
+        Cookie thisBudgetMonthCookie = new Cookie("thisBudgetMonth", Integer.toString(thisBudgetMonthId));
+        response.addCookie(thisBudgetMonthCookie);
+        BudgetMonthController.setThisBudgetMonth(thisBudgetMonthCookie);
+
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String rentString = formatter.format(thisBudgetMonth.getRent());
         String electricString = formatter.format(thisBudgetMonth.getElectric());
         String gasString = formatter.format(thisBudgetMonth.getGas());
         String internetString = formatter.format(thisBudgetMonth.getInternet());
+//        String waterString = formatter.format(thisBudgetMonth.getWater());
         String etcString = formatter.format(thisBudgetMonth.getEtc());
         String totalString = formatter.format(thisBudgetMonth.total());
         String perPersonString = formatter.format(thisBudgetMonth.total()/numberOfUsers);
@@ -81,11 +87,50 @@ public class BudgetMonthController extends MainController {
         model.addAttribute("electric", electricString);
         model.addAttribute("gas", gasString);
         model.addAttribute("internet", internetString);
+//        model.addAttribute("water", waterString);
         model.addAttribute("etc", etcString);
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
 
         return "budget/index";
+    }
+    @RequestMapping(value = "rent", method = RequestMethod.GET)
+    public String displayRent(Model model,
+                              HttpServletResponse response,
+                              @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString) {
+//        Integer thisBudgetMonthId = Integer.parseInt(BudgetMonthController.getThisBudgetMonth().getValue());
+        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double rent = thisBudgetMonth.getRent();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String rentString = formatter.format(rent);
+        response.addCookie(BudgetMonthController.getThisBudgetMonth());
+
+
+
+        model.addAttribute("title", "Rent");
+        model.addAttribute("rentAmount", rentString);
+        return "budget/rent";
+    }
+    //TODO: finish handler for rent adjustment
+    @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"updateRent"})
+    public String processRent(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                              @RequestParam String updateAmountString) {
+    int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+    BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+    Double updateAmount = Double.parseDouble(updateAmountString);
+    thisBudgetMonth.setRent(updateAmount);
+    budgetMonthDao.save(thisBudgetMonth);
+    return "redirect:/budget";
+    }
+
+    @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"logout"})
+    public String rentLogout(HttpServletResponse response) {
+        BudgetMonthController.setLoggedInUser(null);
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})

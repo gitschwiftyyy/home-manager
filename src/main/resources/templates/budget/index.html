@@ -6,7 +6,7 @@
 </head>
 <body class="container">
 <div th:replace="fragments :: header"></div>
-<table class="table" style="max-width:600px">
+<table class="table" style="max-width:400px">
     <tr>
         <th>Utility</th>
         <th>Amount</th>
@@ -14,22 +14,32 @@
     <tr>
         <td>Rent</td>
         <td th:text="${rent}">Rent</td>
+        <td><a href="/budget/rent">Update</a> </td>
     </tr>
     <tr>
         <td>Electric</td>
         <td th:text="${electric}">Electric</td>
+        <td><a href="/budget/electric">Update</a> </td>
     </tr>
     <tr>
         <td>Gas</td>
         <td th:text="${gas}">Gas</td>
+        <td><a href="/budget/gas">Update</a> </td>
     </tr>
     <tr>
         <td>Internet</td>
         <td th:text="${internet}">Internet</td>
+        <td><a href="/budget/internet">Update</a> </td>
     </tr>
+    <!--<tr>-->
+        <!--<td>Water</td>-->
+        <!--<td th:text="${water}">Water</td>-->
+        <!--<td><a href="/budget/water">Update</a> </td>-->
+    <!--</tr>-->
     <tr>
         <td>Etc.</td>
         <td th:text="${etc}">Etc</td>
+        <td><a href="/budget/etc">Update</a> </td>
     </tr>
     <tr>
         <td>Total</td>

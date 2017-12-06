@@ -20,6 +20,7 @@ public class BudgetMonth {
     private Double electric = 0.0;
     private Double gas = 0.0;
     private Double internet = 0.0;
+//    private Double water = 0.0;
     private Double etc = 0.0;
 
     public BudgetMonth(Integer month, Integer year) {
@@ -94,6 +95,14 @@ public class BudgetMonth {
     public void setInternet(Double internet) {
         this.internet = internet;
     }
+
+//    public Double getWater() {
+//        return water;
+//    }
+//
+//    public void setWater(Double water) {
+//        this.water = water;
+//    }
 
     public Double getEtc() {
         return etc;

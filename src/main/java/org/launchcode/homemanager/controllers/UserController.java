@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "user")
 public class UserController extends MainController {
 
-    public static Cookie loggedInCookie;
 
     @Autowired
     private UserDao userDao;
@@ -152,7 +151,7 @@ public class UserController extends MainController {
 
             userDao.save(newUser);
 
-            return "redirect:";
+            return "redirect:/";
         } else {
             if (passwordsMatch) {
                 model.addAttribute("password", password);

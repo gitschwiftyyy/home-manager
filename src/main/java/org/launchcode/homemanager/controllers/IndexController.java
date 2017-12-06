@@ -23,6 +23,7 @@ import java.lang.reflect.Array;
  * Created by schwifty on 10/28/17.
  */
 @Controller
+@RequestMapping(value = "dashboard")
 public class IndexController extends MainController {
 
     @Autowired
@@ -37,18 +38,24 @@ public class IndexController extends MainController {
     @Autowired
     private UserDao userDao;
 
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model,
-                        HttpServletRequest request,
-                        HttpServletResponse response) {
-        if (IndexController.getLoggedInUser() == null) {
+                        HttpServletResponse response,
+                        @CookieValue(value = "loggedInCookie", required = false) String loggedInCookieString) {
+
+        if (IndexController.getLoggedInUser() != null) {
+            Cookie loggedInCookie = IndexController.getLoggedInUser();
+            response.addCookie(loggedInCookie);
+            IndexController.setLoggedInUser(null);
+        }
+        if (loggedInCookieString == "" || loggedInCookieString == null) {
             return "redirect:/user/login";
         }
-        Cookie loggedInCookie = IndexController.getLoggedInUser();
-        response.addCookie(loggedInCookie);
-        int userId = Integer.parseInt(loggedInCookie.getValue());
-        User loggedInUser = userDao.findOne(userId);
 
+
+        int userId = Integer.parseInt(loggedInCookieString);
+        User loggedInUser = userDao.findOne(userId);
 
         model.addAttribute("title", "Dashboard");
         model.addAttribute("tasks", taskDao.findAll());
@@ -56,7 +63,6 @@ public class IndexController extends MainController {
         model.addAttribute("messages", messageDao.findAll());
         model.addAttribute("user", "Welcome, " + loggedInUser.getName());
         return "index";
-
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"deleteListItem"})

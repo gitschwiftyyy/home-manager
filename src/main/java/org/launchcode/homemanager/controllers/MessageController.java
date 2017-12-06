@@ -28,15 +28,16 @@ public class MessageController extends MainController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayMessages(Model model,
-                                  HttpServletResponse response) {
-        if (MessageController.getLoggedInUser() == null) {
+                                  HttpServletResponse response,
+                                  @CookieValue(value = "loggedInCookie", required = false) String loggedInUser) {
+        if (loggedInUser == "" || loggedInUser == null) {
             return "redirect:/user/login";
         }
 
         model.addAttribute("title", "Message Board");
         model.addAttribute("messages", messageDao.findAll());
-        Cookie loggedInCookie = MessageController.getLoggedInUser();
-        response.addCookie(loggedInCookie);
+//        Cookie loggedInCookie = MessageController.getLoggedInUser();
+//        response.addCookie(loggedInCookie);
 
         return "messages/messages";
     }
@@ -55,7 +56,7 @@ public class MessageController extends MainController {
 
         messageDao.save(newMessage);
 
-        return "redirect:";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})

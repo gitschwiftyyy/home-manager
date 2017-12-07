@@ -19,7 +19,7 @@ import java.util.Calendar;
  */
 @Controller
 @RequestMapping(value = "budget")
-public class BudgetMonthController extends MainController {
+public class BudgetMonthController {
 
     @Autowired
     BudgetMonthDao budgetMonthDao;
@@ -30,15 +30,13 @@ public class BudgetMonthController extends MainController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayBudget(Model model,
-                                HttpServletResponse response) {
-        if (BudgetMonthController.getLoggedInUser() == null) {
+                                HttpServletResponse response,
+                                @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
             return "redirect:/user/login";
         }
 
-        Cookie loggedInCookie = BudgetMonthController.getLoggedInUser();
-        response.addCookie(loggedInCookie);
-        int thisUserId = Integer.parseInt(loggedInCookie.getValue());
-        User thisUser = userDao.findOne(thisUserId);
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
 
         //Determine current year and month
         Calendar cal = Calendar.getInstance();
@@ -68,7 +66,6 @@ public class BudgetMonthController extends MainController {
         int thisBudgetMonthId = thisBudgetMonth.getId();
         Cookie thisBudgetMonthCookie = new Cookie("thisBudgetMonth", Integer.toString(thisBudgetMonthId));
         response.addCookie(thisBudgetMonthCookie);
-        BudgetMonthController.setThisBudgetMonth(thisBudgetMonthCookie);
 
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
@@ -104,15 +101,12 @@ public class BudgetMonthController extends MainController {
         Double rent = thisBudgetMonth.getRent();
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String rentString = formatter.format(rent);
-        response.addCookie(BudgetMonthController.getThisBudgetMonth());
-
-
 
         model.addAttribute("title", "Rent");
         model.addAttribute("rentAmount", rentString);
         return "budget/rent";
     }
-    //TODO: finish handler for rent adjustment
+    
     @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"updateRent"})
     public String processRent(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
                               @RequestParam String updateAmountString) {
@@ -126,7 +120,6 @@ public class BudgetMonthController extends MainController {
 
     @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"logout"})
     public String rentLogout(HttpServletResponse response) {
-        BudgetMonthController.setLoggedInUser(null);
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);
@@ -135,7 +128,6 @@ public class BudgetMonthController extends MainController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {
-        BudgetMonthController.setLoggedInUser(null);
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);

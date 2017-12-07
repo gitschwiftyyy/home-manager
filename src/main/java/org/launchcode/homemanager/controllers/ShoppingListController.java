@@ -7,10 +7,7 @@ import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(value = "shopping-list")
-public class ShoppingListController extends MainController {
+public class ShoppingListController {
 
     @Autowired
     private ListItemDao listItemDao;
@@ -30,15 +27,13 @@ public class ShoppingListController extends MainController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayShoppingList (Model model,
-                                       HttpServletResponse response) {
+                                       @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
 
-        if (ShoppingListController.getLoggedInUser() == null) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
             return "redirect:/user/login";
         }
-        Cookie loggedInCookie = ShoppingListController.getLoggedInUser();
-        response.addCookie(loggedInCookie);
-        int userId = Integer.parseInt(loggedInCookie.getValue());
-        User loggedInUser = userDao.findOne(userId);
+
+        User loggedInUser = userDao.findOne(Integer.parseInt(loggedInUserId));
 
         model.addAttribute("items", listItemDao.findAll());
         model.addAttribute("listItem", new ListItem());
@@ -66,7 +61,6 @@ public class ShoppingListController extends MainController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {
-        ShoppingListController.setLoggedInUser(null);
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);

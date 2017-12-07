@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(value = "messages")
-public class MessageController extends MainController {
+public class MessageController {
 
     @Autowired
     private MessageDao messageDao;
@@ -56,12 +56,11 @@ public class MessageController extends MainController {
 
         messageDao.save(newMessage);
 
-        return "redirect:/";
+        return "redirect:/messages";
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {
-        MessageController.setLoggedInUser(null);
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);

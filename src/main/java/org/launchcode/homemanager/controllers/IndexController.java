@@ -24,7 +24,7 @@ import java.lang.reflect.Array;
  */
 @Controller
 @RequestMapping(value = "dashboard")
-public class IndexController extends MainController {
+public class IndexController {
 
     @Autowired
     private TaskDao taskDao;
@@ -44,18 +44,11 @@ public class IndexController extends MainController {
                         HttpServletResponse response,
                         @CookieValue(value = "loggedInCookie", required = false) String loggedInCookieString) {
 
-        if (IndexController.getLoggedInUser() != null) {
-            Cookie loggedInCookie = IndexController.getLoggedInUser();
-            response.addCookie(loggedInCookie);
-            IndexController.setLoggedInUser(null);
-        }
         if (loggedInCookieString == "" || loggedInCookieString == null) {
             return "redirect:/user/login";
         }
 
-
-        int userId = Integer.parseInt(loggedInCookieString);
-        User loggedInUser = userDao.findOne(userId);
+        User loggedInUser = userDao.findOne(Integer.parseInt(loggedInCookieString));
 
         model.addAttribute("title", "Dashboard");
         model.addAttribute("tasks", taskDao.findAll());
@@ -76,7 +69,6 @@ public class IndexController extends MainController {
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {
-        IndexController.setLoggedInUser(null);
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);

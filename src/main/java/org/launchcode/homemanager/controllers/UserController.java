@@ -80,9 +80,8 @@ public class UserController extends MainController {
             Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
             loggedInCookie.setMaxAge(24*60*60);
             UserController.setLoggedInUser(loggedInCookie);
-            response.addCookie(loggedInCookie);
 
-            return "redirect:/"; //TODO: add cookies (done?)
+            return "redirect:/";
 
         } else {
             model.addAttribute("usernameError", usernameError);
@@ -107,7 +106,8 @@ public class UserController extends MainController {
                                   @RequestParam String password,
                                   @RequestParam String confirmPassword,
                                   @RequestParam String email,
-                                  Model model) {
+                                  Model model,
+                                  HttpServletResponse response) {
 
         User newUser = new User();
 
@@ -148,8 +148,12 @@ public class UserController extends MainController {
             newUser.setName(username);
             newUser.setPasswordHash(passwordHash);
             newUser.setEmail(email);
-
             userDao.save(newUser);
+
+            String cookieValueString = Integer.toString(newUser.getId());
+            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
+            loggedInCookie.setMaxAge(24*60*60);
+            UserController.setLoggedInUser(loggedInCookie);
 
             return "redirect:/";
         } else {
@@ -167,14 +171,5 @@ public class UserController extends MainController {
         }
 
     }
-    @RequestMapping(value = "welcome", method = RequestMethod.GET)
-    String displayWelcome (Model model,
-                           @CookieValue(value = "loggedInCookie")
-                                   String cookieValue) {
-        int userId = Integer.parseInt(cookieValue);
-        User thisUser = userDao.findOne(userId);
-        model.addAttribute("usernameGreeting","Welcome, " + thisUser.getName() + "!");
 
-        return "user/welcome";
-    }
 }

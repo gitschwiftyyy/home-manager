@@ -7,6 +7,7 @@ import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(value = "task")
-public class TaskController extends MainController{
+public class TaskController {
 
     @Autowired
     private TaskDao taskDao;
@@ -29,13 +30,13 @@ public class TaskController extends MainController{
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model,
-                                     HttpServletResponse response) {
-        if (TaskController.getLoggedInUser() == null) {
+                                     HttpServletResponse response,
+                                     @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
             return "redirect:/user/login";
         }
-        Cookie loggedInCookie = TaskController.getLoggedInUser();
-        response.addCookie(loggedInCookie);
-        int userId = Integer.parseInt(loggedInCookie.getValue());
+
+        int userId = Integer.parseInt(loggedInUserId);
         User loggedInUser = userDao.findOne(userId);
 
         model.addAttribute("task", new Task());
@@ -53,7 +54,6 @@ public class TaskController extends MainController{
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {
-        TaskController.setLoggedInUser(null);
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);

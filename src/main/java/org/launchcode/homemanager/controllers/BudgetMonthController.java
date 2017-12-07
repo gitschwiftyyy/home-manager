@@ -91,11 +91,15 @@ public class BudgetMonthController {
 
         return "budget/index";
     }
+
     @RequestMapping(value = "rent", method = RequestMethod.GET)
     public String displayRent(Model model,
                               HttpServletResponse response,
-                              @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString) {
-//        Integer thisBudgetMonthId = Integer.parseInt(BudgetMonthController.getThisBudgetMonth().getValue());
+                              @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                              @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
+            return "redirect:/user/login";
+        }
         Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
         BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
         Double rent = thisBudgetMonth.getRent();
@@ -107,19 +111,167 @@ public class BudgetMonthController {
         return "budget/rent";
     }
 
-    @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"updateRent"})
+    @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"update"})
     public String processRent(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
                               @RequestParam String updateAmountString) {
-    int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
-    BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
-    Double updateAmount = Double.parseDouble(updateAmountString);
-    thisBudgetMonth.setRent(updateAmount);
-    budgetMonthDao.save(thisBudgetMonth);
-    return "redirect:/budget";
+        int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double updateAmount = Double.parseDouble(updateAmountString);
+        thisBudgetMonth.setRent(updateAmount);
+        budgetMonthDao.save(thisBudgetMonth);
+        return "redirect:/budget";
     }
 
     @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"logout"})
-    public String rentLogout(HttpServletResponse response) {
+    public String logoutRent(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
+
+    @RequestMapping(value = "electric", method = RequestMethod.GET)
+    public String displayElectric(Model model,
+                                  @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                                  @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
+            return "redirect:/user/login";
+        }
+        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double electric = thisBudgetMonth.getElectric();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String electricString = formatter.format(electric);
+
+        model.addAttribute("title", "Electric");
+        model.addAttribute("electricAmount", electricString);
+        return "budget/electric";
+    }
+
+    @RequestMapping(value = "electric", method = RequestMethod.POST, params = {"update"})
+    public String processElectric(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                                  @RequestParam String updateAmountString) {
+        int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double updateAmount = Double.parseDouble(updateAmountString);
+        thisBudgetMonth.setElectric(updateAmount);
+        budgetMonthDao.save(thisBudgetMonth);
+        return "redirect:/budget";
+    }
+
+    @RequestMapping(value = "electric", method = RequestMethod.POST, params = {"logout"})
+    public String logoutElectric(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
+
+    @RequestMapping(value = "gas", method = RequestMethod.GET)
+    public String displayGas(Model model,
+                                  @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                                  @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
+            return "redirect:/user/login";
+        }
+        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double gas = thisBudgetMonth.getGas();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String gasString = formatter.format(gas);
+
+        model.addAttribute("title", "Gas");
+        model.addAttribute("gasAmount", gasString);
+        return "budget/gas";
+    }
+
+    @RequestMapping(value = "gas", method = RequestMethod.POST, params = {"update"})
+    public String processGas(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                                  @RequestParam String updateAmountString) {
+        int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double updateAmount = Double.parseDouble(updateAmountString);
+        thisBudgetMonth.setGas(updateAmount);
+        budgetMonthDao.save(thisBudgetMonth);
+        return "redirect:/budget";
+    }
+
+    @RequestMapping(value = "gas", method = RequestMethod.POST, params = {"logout"})
+    public String logoutGas(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
+
+    @RequestMapping(value = "internet", method = RequestMethod.GET)
+    public String displayInternet(Model model,
+                             @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                             @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
+            return "redirect:/user/login";
+        }
+        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double internet = thisBudgetMonth.getInternet();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String internetString = formatter.format(internet);
+
+        model.addAttribute("title", "Internet");
+        model.addAttribute("internetAmount", internetString);
+        return "budget/internet";
+    }
+
+    @RequestMapping(value = "internet", method = RequestMethod.POST, params = {"update"})
+    public String processInternet(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                             @RequestParam String updateAmountString) {
+        int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double updateAmount = Double.parseDouble(updateAmountString);
+        thisBudgetMonth.setInternet(updateAmount);
+        budgetMonthDao.save(thisBudgetMonth);
+        return "redirect:/budget";
+    }
+
+    @RequestMapping(value = "internet", method = RequestMethod.POST, params = {"logout"})
+    public String logoutInternet(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
+
+    @RequestMapping(value = "etc", method = RequestMethod.GET)
+    public String displayEtc(Model model,
+                                  @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                                  @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        if (loggedInUserId == "" || loggedInUserId == null) {
+            return "redirect:/user/login";
+        }
+        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double etc = thisBudgetMonth.getEtc();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String etcString = formatter.format(etc);
+
+        model.addAttribute("title", "Other");
+        model.addAttribute("etcAmount", etcString);
+        return "budget/etc";
+    }
+
+    @RequestMapping(value = "etc", method = RequestMethod.POST, params = {"update"})
+    public String processEtc(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                                  @RequestParam String updateAmountString) {
+        int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        Double updateAmount = Double.parseDouble(updateAmountString);
+        thisBudgetMonth.setEtc(updateAmount);
+        budgetMonthDao.save(thisBudgetMonth);
+        return "redirect:/budget";
+    }
+
+    @RequestMapping(value = "etc", method = RequestMethod.POST, params = {"logout"})
+    public String logoutEtc(HttpServletResponse response) {
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);

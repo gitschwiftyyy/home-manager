@@ -9,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
+@RequestMapping(value = "")
 public class SplashPageController extends MainController{
 
     //creates a splashpage after login which sets the login cookie for the entire domain

@@ -17,11 +17,13 @@ public class SplashPageController extends MainController{
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String welcome(Model model,
                           HttpServletResponse response) {
-        Cookie loggedInUserCookie = SplashPageController.getLoggedInUser();
-        loggedInUserCookie.setMaxAge(60*60);
-        response.addCookie(loggedInUserCookie);
-        SplashPageController.setLoggedInUser(null);
-
+        if (SplashPageController.getLoggedInUser() == null) {
+            return "redirect:/dashboard";
+        }
+            Cookie loggedInUserCookie = SplashPageController.getLoggedInUser();
+            loggedInUserCookie.setMaxAge(60 * 60);
+            response.addCookie(loggedInUserCookie);
+            SplashPageController.setLoggedInUser(null);
         return "splashpage";
     }
 }

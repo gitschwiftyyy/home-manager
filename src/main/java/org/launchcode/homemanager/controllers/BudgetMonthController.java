@@ -106,7 +106,7 @@ public class BudgetMonthController {
         model.addAttribute("rentAmount", rentString);
         return "budget/rent";
     }
-    
+
     @RequestMapping(value = "rent", method = RequestMethod.POST, params = {"updateRent"})
     public String processRent(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
                               @RequestParam String updateAmountString) {

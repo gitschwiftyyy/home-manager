@@ -43,7 +43,7 @@ public class RentController {
         Double updateAmount = Double.parseDouble(updateAmountString);
         thisBudgetMonth.setRent(updateAmount);
         budgetMonthDao.save(thisBudgetMonth);
-        return "redirect:/budget";
+        return "redirect:/budget/" + year + "/" + month;
     }
 
     @RequestMapping(value = "/budget/{year}/{month}/rent", method = RequestMethod.POST, params = {"logout"})

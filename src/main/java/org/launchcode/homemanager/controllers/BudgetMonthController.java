@@ -57,9 +57,8 @@ public class BudgetMonthController {
         BudgetMonth thisBudgetMonth = budgetMonthDao.findByYearAndMonth(Integer.parseInt(year), BudgetMonth.monthInt(month));
         if (thisBudgetMonth == null) {
             thisBudgetMonth = new BudgetMonth(BudgetMonth.monthInt(month), Integer.parseInt(year));
+            budgetMonthDao.save(thisBudgetMonth);
         }
-        String monthString = thisBudgetMonth.monthName(thisBudgetMonth.getMonth());
-        String yearString = Integer.toString(thisBudgetMonth.getYear());
 
         //Determine number of users
         int numberOfUsers = 0;
@@ -99,8 +98,10 @@ public class BudgetMonthController {
             nextYear = thisBudgetMonth.getYear();
         }
 
+        Integer currentMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId)).getMonth();
+        Integer currentYear = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId)).getYear();
 
-        model.addAttribute("title", monthString + ", " + yearString);
+        model.addAttribute("title", month + ", " + year);
         model.addAttribute("user", thisUser.getName());
         model.addAttribute("rent", rentString);
         model.addAttribute("electric", electricString);
@@ -110,12 +111,14 @@ public class BudgetMonthController {
         model.addAttribute("etc", etcString);
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
-        model.addAttribute("month", BudgetMonth.monthName(thisBudgetMonth.getMonth()));
-        model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
+        model.addAttribute("month", month);
+        model.addAttribute("year", year);
         model.addAttribute("prevMonth", BudgetMonth.monthName(prevMonth));
         model.addAttribute("prevYear", Integer.toString(prevYear));
         model.addAttribute("nextMonth", BudgetMonth.monthName(nextMonth));
         model.addAttribute("nextYear", Integer.toString(nextYear));
+        model.addAttribute("currentMonth", BudgetMonth.monthName(currentMonth));
+        model.addAttribute("currentYear", Integer.toString(currentYear));
 
         return "budget/index";
     }

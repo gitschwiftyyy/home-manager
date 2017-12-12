@@ -41,6 +41,16 @@ public class BudgetMonth {
         return monthNames[month];
     }
 
+    public static Integer monthInt(String month) {
+        String[] monthNames = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        for (int i = 0; i < monthNames.length; i++) {
+            if (month.equals(monthNames[i])) {
+                return i;
+            }
+        }
+        return null;
+    }
+
 
 
     public Double eachOwes(int numberOfUsers) {

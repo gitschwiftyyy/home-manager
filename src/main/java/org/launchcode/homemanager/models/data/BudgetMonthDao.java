@@ -12,4 +12,6 @@ import javax.transaction.Transactional;
 @Repository
 @Transactional
 public interface BudgetMonthDao extends CrudRepository<BudgetMonth, Integer> {
+
+    BudgetMonth findByYearAndMonth(Integer year, Integer month);
 }

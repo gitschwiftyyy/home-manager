@@ -1,12 +1,10 @@
 package org.launchcode.homemanager.controllers;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.launchcode.homemanager.models.BudgetMonth;
 import org.launchcode.homemanager.models.ListItem;
 import org.launchcode.homemanager.models.User;
-import org.launchcode.homemanager.models.data.ListItemDao;
-import org.launchcode.homemanager.models.data.MessageDao;
-import org.launchcode.homemanager.models.data.TaskDao;
-import org.launchcode.homemanager.models.data.UserDao;
+import org.launchcode.homemanager.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,23 +36,30 @@ public class IndexController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private BudgetMonthDao budgetMonthDao;
+
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model,
                         HttpServletResponse response,
-                        @CookieValue(value = "loggedInCookie", required = false) String loggedInCookieString) {
+                        @CookieValue(value = "loggedInCookie", required = false) String loggedInCookieString,
+                        @CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthId) {
 
         if (loggedInCookieString == "" || loggedInCookieString == null) {
             return "redirect:/user/login";
         }
 
         User loggedInUser = userDao.findOne(Integer.parseInt(loggedInCookieString));
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId));
 
         model.addAttribute("title", "Dashboard");
         model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("shoppingList", listItemDao.findAll());
         model.addAttribute("messages", messageDao.findAll());
         model.addAttribute("user", "Welcome, " + loggedInUser.getName());
+        model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
+        model.addAttribute("month", thisBudgetMonth.monthName(thisBudgetMonth.getMonth()));
         return "index";
     }
 

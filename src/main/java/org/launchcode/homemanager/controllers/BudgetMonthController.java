@@ -28,22 +28,25 @@ public class BudgetMonthController {
     UserDao userDao;
 
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "/{year}/{month}", method = RequestMethod.GET)
     public String displayBudget(Model model,
                                 HttpServletResponse response,
-                                @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+                                @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId,
+                                @CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthId,
+                                @PathVariable String year,
+                                @PathVariable String month) {
         if (loggedInUserId == "" || loggedInUserId == null) {
             return "redirect:/user/login";
         }
 
         User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
 
-        //Determine current year and month
-        Calendar cal = Calendar.getInstance();
-        Integer month = cal.get(Calendar.MONTH);
-        String monthString = BudgetMonth.monthName(month);
-        Integer year = cal.get(Calendar.YEAR);
-        String yearString = Integer.toString(year);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findByYearAndMonth(Integer.parseInt(year), BudgetMonth.monthInt(month));
+        if (thisBudgetMonth == null) {
+            thisBudgetMonth = new BudgetMonth(BudgetMonth.monthInt(month), Integer.parseInt(year));
+        }
+        String monthString = thisBudgetMonth.monthName(thisBudgetMonth.getMonth());
+        String yearString = Integer.toString(thisBudgetMonth.getYear());
 
         //Determine number of users
         int numberOfUsers = 0;
@@ -51,21 +54,6 @@ public class BudgetMonthController {
             numberOfUsers ++;
         }
 
-        //Determine which BudgetMonth to use, or create one as necessary
-        BudgetMonth thisBudgetMonth = null;
-        for (BudgetMonth budgetMonth : budgetMonthDao.findAll()) {
-            if (budgetMonth.getMonth().equals(month) && budgetMonth.getYear().equals(year)) {
-                thisBudgetMonth = budgetMonth;
-            }
-        }
-        if (thisBudgetMonth == null) {
-            thisBudgetMonth = new BudgetMonth(month, year);
-            budgetMonthDao.save(thisBudgetMonth);
-        }
-
-        int thisBudgetMonthId = thisBudgetMonth.getId();
-        Cookie thisBudgetMonthCookie = new Cookie("thisBudgetMonth", Integer.toString(thisBudgetMonthId));
-        response.addCookie(thisBudgetMonthCookie);
 
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
@@ -78,6 +66,8 @@ public class BudgetMonthController {
         String totalString = formatter.format(thisBudgetMonth.total());
         String perPersonString = formatter.format(thisBudgetMonth.total()/numberOfUsers);
 
+        Integer prevMonth = thisBudgetMonth.getMonth() - 1;
+
         model.addAttribute("title", monthString + ", " + yearString);
         model.addAttribute("user", thisUser.getName());
         model.addAttribute("rent", rentString);
@@ -88,6 +78,8 @@ public class BudgetMonthController {
         model.addAttribute("etc", etcString);
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
+        model.addAttribute("prevMonth", BudgetMonth.monthName(prevMonth));
+        model.addAttribute("prevYear", Integer.toString(thisBudgetMonth.getYear()));
 
         return "budget/index";
     }

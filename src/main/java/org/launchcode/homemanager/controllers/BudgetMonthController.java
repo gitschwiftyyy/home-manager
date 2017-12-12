@@ -26,7 +26,20 @@ public class BudgetMonthController {
 
     @Autowired
     UserDao userDao;
+    
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String displayBudgetRedirect(@CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthIdString,
+                                        @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
 
+        if (loggedInUserId == "" || loggedInUserId == null) {
+            return "redirect:/user/login";
+        }
+        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        String year = Integer.toString(thisBudgetMonth.getYear());
+        String month = BudgetMonth.monthName(thisBudgetMonth.getMonth());
+        return "redirect:/budget/" + year + "/" + month;
+    }
 
     @RequestMapping(value = "/{year}/{month}", method = RequestMethod.GET)
     public String displayBudget(Model model,

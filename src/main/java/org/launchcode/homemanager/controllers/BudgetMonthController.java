@@ -26,7 +26,7 @@ public class BudgetMonthController {
 
     @Autowired
     UserDao userDao;
-    
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayBudgetRedirect(@CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthIdString,
                                         @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
@@ -110,6 +110,8 @@ public class BudgetMonthController {
         model.addAttribute("etc", etcString);
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
+        model.addAttribute("month", BudgetMonth.monthName(thisBudgetMonth.getMonth()));
+        model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
         model.addAttribute("prevMonth", BudgetMonth.monthName(prevMonth));
         model.addAttribute("prevYear", Integer.toString(prevYear));
         model.addAttribute("nextMonth", BudgetMonth.monthName(nextMonth));

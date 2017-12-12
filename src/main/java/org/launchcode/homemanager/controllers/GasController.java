@@ -5,10 +5,7 @@ import org.launchcode.homemanager.models.data.BudgetMonthDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +17,15 @@ public class GasController {
     @Autowired
     BudgetMonthDao budgetMonthDao;
 
-    @RequestMapping(value = "gas", method = RequestMethod.GET)
+    @RequestMapping(value = "/budget/{year}/{month}/gas", method = RequestMethod.GET)
     public String displayGas(Model model,
-                             @CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+                             @PathVariable String year,
+                             @PathVariable String month,
                              @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
         if (loggedInUserId == "" || loggedInUserId == null) {
             return "redirect:/user/login";
         }
-        Integer thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
-        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findByYearAndMonth(Integer.parseInt(year), BudgetMonth.monthInt(month));
         Double gas = thisBudgetMonth.getGas();
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String gasString = formatter.format(gas);
@@ -38,18 +35,18 @@ public class GasController {
         return "budget/gas";
     }
 
-    @RequestMapping(value = "gas", method = RequestMethod.POST, params = {"update"})
-    public String processGas(@CookieValue(value = "thisBudgetMonth") String thisBudgetMonthIdString,
+    @RequestMapping(value = "/budget/{year}/{month}/gas", method = RequestMethod.POST, params = {"update"})
+    public String processGas(@PathVariable String year,
+                             @PathVariable String month,
                              @RequestParam String updateAmountString) {
-        int thisBudgetMonthId = Integer.parseInt(thisBudgetMonthIdString);
-        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(thisBudgetMonthId);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findByYearAndMonth(Integer.parseInt(year), BudgetMonth.monthInt(month));
         Double updateAmount = Double.parseDouble(updateAmountString);
         thisBudgetMonth.setGas(updateAmount);
         budgetMonthDao.save(thisBudgetMonth);
         return "redirect:/budget";
     }
 
-    @RequestMapping(value = "gas", method = RequestMethod.POST, params = {"logout"})
+    @RequestMapping(value = "/budget/{year}/{month}/gas", method = RequestMethod.POST, params = {"logout"})
     public String logoutGas(HttpServletResponse response) {
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);

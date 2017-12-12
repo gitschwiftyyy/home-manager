@@ -14,22 +14,22 @@
     <tr>
         <td>Rent</td>
         <td th:text="${rent}">Rent</td>
-        <td><a href="/rent">Update</a> </td>
+        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + rent}">Update</a> </td>
     </tr>
     <tr>
         <td>Electric</td>
         <td th:text="${electric}">Electric</td>
-        <td><a href="/electric">Update</a> </td>
+        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + electric}">Update</a> </td>
     </tr>
     <tr>
         <td>Gas</td>
         <td th:text="${gas}">Gas</td>
-        <td><a href="/gas">Update</a> </td>
+        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + gas}">Update</a> </td>
     </tr>
     <tr>
         <td>Internet</td>
         <td th:text="${internet}">Internet</td>
-        <td><a href="internet">Update</a> </td>
+        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + internet}">Update</a> </td>
     </tr>
     <!--<tr>-->
         <!--<td>Water</td>-->
@@ -39,7 +39,7 @@
     <tr>
         <td>Etc.</td>
         <td th:text="${etc}">Etc</td>
-        <td><a href="/etc">Update</a> </td>
+        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + etc}">Update</a> </td>
     </tr>
     <tr>
         <td>Total</td>

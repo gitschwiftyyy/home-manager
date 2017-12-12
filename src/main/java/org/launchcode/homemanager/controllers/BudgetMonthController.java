@@ -66,7 +66,26 @@ public class BudgetMonthController {
         String totalString = formatter.format(thisBudgetMonth.total());
         String perPersonString = formatter.format(thisBudgetMonth.total()/numberOfUsers);
 
-        Integer prevMonth = thisBudgetMonth.getMonth() - 1;
+        Integer prevMonth;
+        Integer prevYear;
+        if (thisBudgetMonth.getMonth() == 0) {
+            prevMonth = 11;
+            prevYear = thisBudgetMonth.getYear() - 1;
+        } else {
+            prevMonth = thisBudgetMonth.getMonth() - 1;
+            prevYear = thisBudgetMonth.getYear();
+        }
+
+        Integer nextMonth;
+        Integer nextYear;
+        if (thisBudgetMonth.getMonth() == 11) {
+            nextMonth = 0;
+            nextYear = thisBudgetMonth.getYear() + 1;
+        } else {
+            nextMonth = thisBudgetMonth.getMonth() + 1;
+            nextYear = thisBudgetMonth.getYear();
+        }
+
 
         model.addAttribute("title", monthString + ", " + yearString);
         model.addAttribute("user", thisUser.getName());
@@ -79,12 +98,14 @@ public class BudgetMonthController {
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
         model.addAttribute("prevMonth", BudgetMonth.monthName(prevMonth));
-        model.addAttribute("prevYear", Integer.toString(thisBudgetMonth.getYear()));
+        model.addAttribute("prevYear", Integer.toString(prevYear));
+        model.addAttribute("nextMonth", BudgetMonth.monthName(nextMonth));
+        model.addAttribute("nextYear", Integer.toString(nextYear));
 
         return "budget/index";
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
+    @RequestMapping(value = "/{year}/{month}", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {
         Cookie logoutCookie = new Cookie("loggedInCookie", "");
         logoutCookie.setMaxAge(0);

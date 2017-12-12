@@ -51,8 +51,10 @@
     </tr>
 </table>
 
-<a th:href="@{'/budget/' + ${prevYear} + '/' + ${prevMonth}}">Previous Month</a>
-
+<nav>
+    <a th:href="@{'/budget/' + ${prevYear} + '/' + ${prevMonth}}"> Previous Month</a> |
+    <a th:href="@{'/budget/' + ${nextYear} + '/' + ${nextMonth}}">Next Month </a>
+</nav>
 
 
 </body>

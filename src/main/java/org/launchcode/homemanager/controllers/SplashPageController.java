@@ -53,6 +53,7 @@ public class SplashPageController extends MainController{
         int thisBudgetMonthId = thisBudgetMonth.getId();
         Cookie thisBudgetMonthCookie = new Cookie("thisBudgetMonth", Integer.toString(thisBudgetMonthId));
         response.addCookie(thisBudgetMonthCookie);
+        thisBudgetMonthCookie.setMaxAge(60 * 60);
 
         return "splashpage";
     }

@@ -1,7 +1,9 @@
 package org.launchcode.homemanager.controllers;
 
+import org.launchcode.homemanager.models.BudgetMonth;
 import org.launchcode.homemanager.models.Task;
 import org.launchcode.homemanager.models.User;
+import org.launchcode.homemanager.models.data.BudgetMonthDao;
 import org.launchcode.homemanager.models.data.TaskDao;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,12 @@ public class TaskController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private BudgetMonthDao budgetMonthDao;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model,
-                                     HttpServletResponse response,
+                                     @CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthId,
                                      @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
         if (loggedInUserId == "" || loggedInUserId == null) {
             return "redirect:/user/login";
@@ -38,11 +43,15 @@ public class TaskController {
 
         int userId = Integer.parseInt(loggedInUserId);
         User loggedInUser = userDao.findOne(userId);
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId));
+
 
         model.addAttribute("task", new Task());
         model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("title", "Add Task");
         model.addAttribute("user", loggedInUser.getName());
+        model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
+        model.addAttribute("month", thisBudgetMonth.monthName(thisBudgetMonth.getMonth()));
         return "tasks/add";
     }
 

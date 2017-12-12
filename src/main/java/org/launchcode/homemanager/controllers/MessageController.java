@@ -1,8 +1,10 @@
 package org.launchcode.homemanager.controllers;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.launchcode.homemanager.models.BudgetMonth;
 import org.launchcode.homemanager.models.Message;
 import org.launchcode.homemanager.models.User;
+import org.launchcode.homemanager.models.data.BudgetMonthDao;
 import org.launchcode.homemanager.models.data.MessageDao;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +28,22 @@ public class MessageController {
     @Autowired
     private UserDao userDao;
 
+    @Autowired
+    private BudgetMonthDao budgetMonthDao;
+
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayMessages(Model model,
-                                  HttpServletResponse response,
+                                  @CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthId,
                                   @CookieValue(value = "loggedInCookie", required = false) String loggedInUser) {
         if (loggedInUser == "" || loggedInUser == null) {
             return "redirect:/user/login";
         }
+        BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId));
 
         model.addAttribute("title", "Message Board");
         model.addAttribute("messages", messageDao.findAll());
-//        Cookie loggedInCookie = MessageController.getLoggedInUser();
-//        response.addCookie(loggedInCookie);
+        model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
+        model.addAttribute("month", thisBudgetMonth.monthName(thisBudgetMonth.getMonth()));
 
         return "messages/messages";
     }

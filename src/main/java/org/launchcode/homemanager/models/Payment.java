@@ -20,6 +20,8 @@ public class Payment {
 
     private Double amount = 0.0;
 
+    private Double owes;
+
     public Payment(double amount) {
         this.amount = amount;
     }
@@ -52,5 +54,13 @@ public class Payment {
 
     public void setBudgetMonth(BudgetMonth budgetMonth) {
         this.budgetMonth = budgetMonth;
+    }
+
+    public Double getOwes() {
+        return owes;
+    }
+
+    public void setOwes(Double owes) {
+        this.owes = owes;
     }
 }

@@ -78,21 +78,6 @@ public class BudgetMonthController {
             paymentDao.save(thisPayment);
         }
 
-
-
-        NumberFormat formatter = NumberFormat.getCurrencyInstance();
-        String rentString = formatter.format(thisBudgetMonth.getRent());
-        String electricString = formatter.format(thisBudgetMonth.getElectric());
-        String gasString = formatter.format(thisBudgetMonth.getGas());
-        String internetString = formatter.format(thisBudgetMonth.getInternet());
-//        String waterString = formatter.format(thisBudgetMonth.getWater());
-        String etcString = formatter.format(thisBudgetMonth.getEtc());
-        String totalString = formatter.format(thisBudgetMonth.total());
-        String perPersonString = formatter.format(thisBudgetMonth.total()/numberOfUsers);
-        String paymentString = formatter.format(thisPayment.getAmount());
-        String owedString = formatter.format((thisBudgetMonth.total()/numberOfUsers) - thisPayment.getAmount());
-
-
         Integer prevMonth;
         Integer prevYear;
         if (thisBudgetMonth.getMonth() == 0) {
@@ -116,16 +101,37 @@ public class BudgetMonthController {
         Integer currentMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId)).getMonth();
         Integer currentYear = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId)).getYear();
 
+        BudgetMonth prevBudgetMonth = budgetMonthDao.findByYearAndMonth(prevYear, prevMonth);
+        Payment prevPayment = paymentDao.findByUserAndBudgetMonth(thisUser, prevBudgetMonth);
+        Double owed;
+        if (prevPayment == null) {
+            owed = (thisBudgetMonth.total() / numberOfUsers) - thisPayment.getAmount();
+        } else {
+            owed = (thisBudgetMonth.total() / numberOfUsers) - thisPayment.getAmount() - prevPayment.getAmount() + (prevBudgetMonth.total() / numberOfUsers);
+        }
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        String rentString = formatter.format(thisBudgetMonth.getRent());
+        String electricString = formatter.format(thisBudgetMonth.getElectric());
+        String gasString = formatter.format(thisBudgetMonth.getGas());
+        String internetString = formatter.format(thisBudgetMonth.getInternet());
+        String etcString = formatter.format(thisBudgetMonth.getEtc());
+        String totalString = formatter.format(thisBudgetMonth.total());
+        String perPersonString = formatter.format(thisBudgetMonth.total()/numberOfUsers);
+        String paymentString = formatter.format(thisPayment.getAmount());
+        String owedString = formatter.format(owed);
+
         model.addAttribute("title", month + ", " + year);
         model.addAttribute("user", thisUser.getName());
+
         model.addAttribute("rent", rentString);
         model.addAttribute("electric", electricString);
         model.addAttribute("gas", gasString);
         model.addAttribute("internet", internetString);
-//        model.addAttribute("water", waterString);
         model.addAttribute("etc", etcString);
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
+
         model.addAttribute("month", month);
         model.addAttribute("year", year);
         model.addAttribute("prevMonth", BudgetMonth.monthName(prevMonth));

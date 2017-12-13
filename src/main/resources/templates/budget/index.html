@@ -6,6 +6,7 @@
 </head>
 <body class="container">
 <div th:replace="fragments :: header"></div>
+<div class="col-md-6">
 <table class="table" style="max-width:400px">
     <tr>
         <th>Utility</th>
@@ -49,6 +50,10 @@
         <td>Per Person</td>
         <td th:text="${perPerson}">Per Person</td>
     </tr>
+    <tr>
+        <td>Paid</td>
+        <td th:text="${paymentAmount}">Payment Amount</td>
+    </tr>
 </table>
 
 <nav>
@@ -56,7 +61,20 @@
     <a th:href="@{'/budget/' + ${currentYear} + '/' + ${currentMonth}}">Current Month</a> |
     <a th:href="@{'/budget/' + ${nextYear} + '/' + ${nextMonth}}">Next Month </a>
 </nav>
-
+</div>
+<div class="col-md-6">
+    <div class="pull-center"><h2 th:text="${owed}" class="pull-center"></h2></div>
+<div class="d-flex">
+    <form method="post" style="max-width:600px" class="border-class">
+        <h3 class="loginHeader">Make a Payment</h3>
+        <div class="form-group">
+            <label th:for="paymentAmount">Payment Amount: </label>
+            <input type="text" name="paymentAmount"/>
+        </div>
+        <input type="submit" name="payment" value="Pay"/>
+    </form>
+</div>
+</div>
 
 </body>
 </html>

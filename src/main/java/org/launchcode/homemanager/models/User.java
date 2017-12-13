@@ -18,6 +18,10 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Message> messages = new ArrayList<>();
 
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<Payment> payments = new ArrayList<>();
+
     private String name;
     private String passwordHash;
     private String email;

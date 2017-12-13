@@ -1,8 +1,8 @@
 package org.launchcode.homemanager.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwifty on 11/14/17.
@@ -13,6 +13,10 @@ public class BudgetMonth {
     @Id
     @GeneratedValue
     private int id;
+
+    @OneToMany
+//    @JoinColumn(name = "budgetMonth_id")
+    private List<Payment> payments = new ArrayList<>();
 
     private Integer month;
     private Integer year;

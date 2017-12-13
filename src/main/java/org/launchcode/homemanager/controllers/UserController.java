@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value = "user")
 public class UserController extends MainController {
 
-
     @Autowired
     private UserDao userDao;
 

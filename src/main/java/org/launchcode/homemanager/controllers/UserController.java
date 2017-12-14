@@ -68,10 +68,6 @@ public class UserController {
         }
 
         if (usernameExists && passwordCorrect) {
-//            String cookieValueString = Integer.toString(thisUser.getId());
-//            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
-//            loggedInCookie.setMaxAge(24*60*60);
-//            UserController.setLoggedInUser(loggedInCookie)
             UserController.setLoggedInUser(thisUser);
             return "redirect:/";
 
@@ -141,12 +137,6 @@ public class UserController {
             newUser.setPasswordHash(passwordHash);
             newUser.setEmail(email);
             userDao.save(newUser);
-
-
-//            String cookieValueString = Integer.toString(newUser.getId());
-//            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
-//            loggedInCookie.setMaxAge(24*60*60);
-//            UserController.setLoggedInUser(loggedInCookie);
 
             return "redirect:/";
         } else {

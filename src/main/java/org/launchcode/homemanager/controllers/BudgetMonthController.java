@@ -58,6 +58,7 @@ public class BudgetMonthController {
 
         User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
 
+        //Determine which BudgetMonth to use or create one accordingly
         BudgetMonth thisBudgetMonth = budgetMonthDao.findByYearAndMonth(Integer.parseInt(year), BudgetMonth.monthInt(month));
         if (thisBudgetMonth == null) {
             thisBudgetMonth = new BudgetMonth(BudgetMonth.monthInt(month), Integer.parseInt(year));
@@ -69,7 +70,7 @@ public class BudgetMonthController {
         for (User user : userDao.findAll()) {
             numberOfUsers ++;
         }
-
+        //Determine which Payment to use, or create one accordingly
         Payment thisPayment = paymentDao.findByUserAndBudgetMonth(thisUser, thisBudgetMonth);
         if (thisPayment == null) {
             thisPayment = new Payment();
@@ -78,6 +79,7 @@ public class BudgetMonthController {
             paymentDao.save(thisPayment);
         }
 
+        //Determine previous BudgetMonth
         Integer prevMonth;
         Integer prevYear;
         if (thisBudgetMonth.getMonth() == 0) {
@@ -88,6 +90,7 @@ public class BudgetMonthController {
             prevYear = thisBudgetMonth.getYear();
         }
 
+        // Determine next BudgetMonth
         Integer nextMonth;
         Integer nextYear;
         if (thisBudgetMonth.getMonth() == 11) {
@@ -98,9 +101,11 @@ public class BudgetMonthController {
             nextYear = thisBudgetMonth.getYear();
         }
 
+        //Determine current BudgetMonth by date
         Integer currentMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId)).getMonth();
         Integer currentYear = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId)).getYear();
 
+        //Calculate how much is owed by current user
         BudgetMonth prevBudgetMonth = budgetMonthDao.findByYearAndMonth(prevYear, prevMonth);
         Payment prevPayment = paymentDao.findByUserAndBudgetMonth(thisUser, prevBudgetMonth);
         Double owed;
@@ -110,6 +115,7 @@ public class BudgetMonthController {
             owed = (thisBudgetMonth.total() / numberOfUsers) - thisPayment.getAmount() - prevPayment.getAmount() + (prevBudgetMonth.total() / numberOfUsers);
         }
 
+        //Format values to display as dollar amounts
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         String rentString = formatter.format(thisBudgetMonth.getRent());
         String electricString = formatter.format(thisBudgetMonth.getElectric());
@@ -121,9 +127,11 @@ public class BudgetMonthController {
         String paymentString = formatter.format(thisPayment.getAmount());
         String owedString = formatter.format(owed);
 
+        //Set page headers to template
         model.addAttribute("title", month + ", " + year);
         model.addAttribute("user", thisUser.getName());
 
+        //set BudgetMonth values to template
         model.addAttribute("rent", rentString);
         model.addAttribute("electric", electricString);
         model.addAttribute("gas", gasString);
@@ -132,6 +140,7 @@ public class BudgetMonthController {
         model.addAttribute("total", totalString);
         model.addAttribute("perPerson", perPersonString);
 
+        //set values of links and shit to template
         model.addAttribute("month", month);
         model.addAttribute("year", year);
         model.addAttribute("prevMonth", BudgetMonth.monthName(prevMonth));

@@ -14,7 +14,7 @@ import java.util.Calendar;
 
 @Controller
 @RequestMapping(value = "")
-public class SplashPageController extends MainController{
+public class SplashPageController {
 
     //creates a splashpage after login which sets the login cookie for the entire domain
     //This is important because during development, app is launched on localhost, and chrome
@@ -25,13 +25,14 @@ public class SplashPageController extends MainController{
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String welcome(Model model,
                           HttpServletResponse response) {
-        if (SplashPageController.getLoggedInUser() == null) {
+        if (UserController.getLoggedInUser() == null) {
             return "redirect:/dashboard";
         }
-            Cookie loggedInUserCookie = SplashPageController.getLoggedInUser();
-            loggedInUserCookie.setMaxAge(60 * 60);
-            response.addCookie(loggedInUserCookie);
-            SplashPageController.setLoggedInUser(null);
+        String cookieValueString = Integer.toString(UserController.getLoggedInUser().getId());
+        Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
+        loggedInCookie.setMaxAge(24*60*60);
+        response.addCookie(loggedInCookie);
+        UserController.setLoggedInUser(null);
 
         //Determine current year and month
         Calendar cal = Calendar.getInstance();

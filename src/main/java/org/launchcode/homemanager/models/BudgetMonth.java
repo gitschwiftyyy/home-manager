@@ -15,7 +15,6 @@ public class BudgetMonth {
     private int id;
 
     @OneToMany
-//    @JoinColumn(name = "budgetMonth_id")
     private List<Payment> payments = new ArrayList<>();
 
     private Integer month;
@@ -24,7 +23,6 @@ public class BudgetMonth {
     private Double electric = 0.0;
     private Double gas = 0.0;
     private Double internet = 0.0;
-//    private Double water = 0.0;
     private Double etc = 0.0;
 
     public BudgetMonth(Integer month, Integer year) {

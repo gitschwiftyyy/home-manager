@@ -16,21 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping(value = "user")
-public class UserController extends MainController {
+public class UserController {
+
+    public static User loggedInUser;
 
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model,
-                        HttpServletResponse response) {
-        UserController.setLoggedInUser(null);
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        response.addCookie(logoutCookie);
-        model.addAttribute("title", "User");
 
-        return "user/index";
-    }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String displayLogin(Model model,
@@ -75,11 +68,11 @@ public class UserController extends MainController {
         }
 
         if (usernameExists && passwordCorrect) {
-            String cookieValueString = Integer.toString(thisUser.getId());
-            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
-            loggedInCookie.setMaxAge(24*60*60);
-            UserController.setLoggedInUser(loggedInCookie);
-
+//            String cookieValueString = Integer.toString(thisUser.getId());
+//            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
+//            loggedInCookie.setMaxAge(24*60*60);
+//            UserController.setLoggedInUser(loggedInCookie)
+            UserController.setLoggedInUser(thisUser);
             return "redirect:/";
 
         } else {
@@ -149,10 +142,11 @@ public class UserController extends MainController {
             newUser.setEmail(email);
             userDao.save(newUser);
 
-            String cookieValueString = Integer.toString(newUser.getId());
-            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
-            loggedInCookie.setMaxAge(24*60*60);
-            UserController.setLoggedInUser(loggedInCookie);
+
+//            String cookieValueString = Integer.toString(newUser.getId());
+//            Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
+//            loggedInCookie.setMaxAge(24*60*60);
+//            UserController.setLoggedInUser(loggedInCookie);
 
             return "redirect:/";
         } else {
@@ -169,6 +163,14 @@ public class UserController extends MainController {
             return "user/register";
         }
 
+    }
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public static void setLoggedInUser(User loggedInUser) {
+        UserController.loggedInUser = loggedInUser;
     }
 
 }

@@ -3,6 +3,7 @@ package org.launchcode.homemanager.controllers;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.launchcode.homemanager.models.BudgetMonth;
 import org.launchcode.homemanager.models.ListItem;
+import org.launchcode.homemanager.models.Payment;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
+import java.text.Format;
+import java.text.NumberFormat;
 
 /**
  * Created by schwifty on 10/28/17.
@@ -39,10 +42,12 @@ public class IndexController {
     @Autowired
     private BudgetMonthDao budgetMonthDao;
 
+    @Autowired
+    private PaymentDao paymentDao;
+
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model,
-                        HttpServletResponse response,
                         @CookieValue(value = "loggedInCookie", required = false) String loggedInCookieString,
                         @CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthId) {
 
@@ -53,6 +58,24 @@ public class IndexController {
         User loggedInUser = userDao.findOne(Integer.parseInt(loggedInCookieString));
         BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId));
 
+        //Determine number of users
+        int numberOfUsers = 0;
+        for (User user : userDao.findAll()) {
+            numberOfUsers ++;
+        }
+        //Determine which Payment to use, or create one accordingly
+        Payment thisPayment = paymentDao.findByUserAndBudgetMonth(loggedInUser, thisBudgetMonth);
+        if (thisPayment == null) {
+            thisPayment = new Payment();
+            thisPayment.setUser(loggedInUser);
+            thisPayment.setBudgetMonth(thisBudgetMonth);
+            paymentDao.save(thisPayment);
+        }
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        Double owes = (thisBudgetMonth.total() / numberOfUsers) - thisPayment.getAmount();
+        String owesString = formatter.format(owes);
+
         model.addAttribute("title", "Dashboard");
         model.addAttribute("tasks", taskDao.findAll());
         model.addAttribute("shoppingList", listItemDao.findAll());
@@ -60,6 +83,7 @@ public class IndexController {
         model.addAttribute("user", "Welcome, " + loggedInUser.getName());
         model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
         model.addAttribute("month", thisBudgetMonth.monthName(thisBudgetMonth.getMonth()));
+        model.addAttribute("owes", "You Owe: " + owesString);
         return "index";
     }
 

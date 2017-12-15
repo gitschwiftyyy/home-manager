@@ -6,15 +6,7 @@
 </head>
 <body class="container">
 <div th:replace="fragments :: header"></div>
-<h3>Messages</h3>
-<div class="well" style="max-width:600px">
-<table class="table" style="max-width:600px">
-    <tr th:each="message : ${messages}">
-        <td th:text="${message.message}">Message</td>
-        <td th:text="${message.author.name}"></td>
-    </tr>
-</table>
-</div>
+
  <div class="col-md-6">
      <h3>Tasks</h3>
 <table class="table" style="max-width:600px">
@@ -34,7 +26,8 @@
  </div>
 
   <div class="col-md-6">
-      <div class="col-md-6"></div>
+      <div align="right">
+          <h2 th:text="${owes}">Owes</h2><br/><br/>
 <table class="table" style="max-width:200px">
     <tr>
         <th>Shopping List</th>
@@ -50,9 +43,20 @@
         </td>
     </tr>
 </table>
+      </div>
 <div align="right"><a href="shopping-list">Add Item</a></div>
   </div>
-
+<div align="center">
+<h3>Messages</h3>
+<div class="well" style="max-width:800px">
+    <table class="table" style="max-width:600px">
+        <tr th:each="message : ${messages}">
+            <td th:text="${message.message}">Message</td>
+            <td th:text="${message.author.name}"></td>
+        </tr>
+    </table>
+</div>
+</div>
 
 </body>
 </html>

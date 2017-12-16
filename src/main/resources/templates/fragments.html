@@ -33,7 +33,8 @@
         <a href="/task">Tasks</a> |
         <a href="/shopping-list">Shopping List</a> |
         <a href="/messages">Messages</a> |
-        <a th:href="@{'/budget/' + ${year} + '/' + ${month}}">Budget</a>
+        <a th:href="@{'/budget/' + ${year} + '/' + ${month}}">Budget</a> |
+        <a href="/user">Your Account</a>
     </nav>
     <div class="pull-right">
         <h3 th:text="${user}">Welcome, User</h3>

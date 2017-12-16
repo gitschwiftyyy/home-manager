@@ -154,6 +154,32 @@ public class UserController {
         }
 
     }
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String displayUserPage (Model model,
+                                   @CookieValue(value = "loggedInCookie", required = false) String loggedInUserIdString) {
+        if (loggedInUserIdString == "" || loggedInUserIdString == null) {
+            return "redirect:/user/login";
+        }
+
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserIdString));
+        String username = thisUser.getName();
+        String email = thisUser.getEmail();
+
+        model.addAttribute("title", "Your Account");
+        model.addAttribute("username", username);
+        model.addAttribute("email", email);
+
+        return "user/userPage";
+
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
+    public String logout(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
 
     public static User getLoggedInUser() {
         return loggedInUser;

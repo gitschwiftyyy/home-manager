@@ -172,6 +172,43 @@ public class UserController {
         return "user/userPage";
 
     }
+    @RequestMapping(value = "username", method = RequestMethod.GET)
+    public String displayUpdateUsername (Model model,
+                                         @CookieValue(value = "loggedInCookie", required = false) String loggedInUserString) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserString));
+
+        model.addAttribute("title", "Change Username");
+        model.addAttribute("currentUsername", thisUser.getName());
+
+        return  "user/username";
+    }
+
+    @RequestMapping(value = "username", method = RequestMethod.POST, params = {"updateUsername"})
+    public String processUpdateUsername (@CookieValue(value = "loggedInCookie") String loggedInUserString,
+                                         @RequestParam String newUsername,
+                                         Model model) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserString));
+        for (User user : userDao.findAll()) {
+            if (newUsername.equals(user.getName())) {
+                model.addAttribute("title", "Change Username");
+                model.addAttribute("currentUsername", thisUser.getName());
+                model.addAttribute("usernameError", "Username is already taken!");
+                return "user/username";
+            }
+        }
+
+        thisUser.setName(newUsername);
+        userDao.save(thisUser);
+        return "redirect:/user";
+    }
+
+    @RequestMapping(value = "/*", method = RequestMethod.POST, params = {"logout"})
+    public String logout1(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
     public String logout(HttpServletResponse response) {

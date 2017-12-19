@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+    <meta charset="UTF-8"/>
+    <title></title>
+</head>
+<body>
+<div th:replace="fragments :: header"></div>
+<div class="col-md-3"></div>
+<div class="col-md-6">
+    <div class="d-flex">
+        <h3 class="loginHeader" th:text="${currentUsername}">Current Username</h3>
+        <form style="max-width:600px" method="post" class="border-class">
+            <label th:for="newUsername">New Username: </label>
+            <input type="text" name="newUsername"/>
+            <span th:text="${usernameError}" class="error"></span>
+            <input type="submit" name="updateUsername" value="Update"/>
+        </form>
+    </div>
+</div>
+</body>
+</html>

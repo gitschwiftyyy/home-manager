@@ -202,6 +202,36 @@ public class UserController {
         return "redirect:/user";
     }
 
+    @RequestMapping(value = "email", method = RequestMethod.GET)
+    public String displayUpdateEmail (Model model,
+                                      @CookieValue(value = "loggedInCookie", required = false) String loggedInUserString) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserString));
+
+        model.addAttribute("title", "Change Email");
+        model.addAttribute("currentEmail", thisUser.getEmail());
+
+        return "user/email";
+    }
+    @RequestMapping(value = "email", method = RequestMethod.POST, params = {"updateEmail"})
+    public String processUpdateEmail (Model model,
+                                      @CookieValue(value = "loggedInCookie") String loggedInUserString,
+                                      @RequestParam String newEmail) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserString));
+        for (User user : userDao.findAll()) {
+            if (newEmail.equals(user.getEmail())) {
+                model.addAttribute("title", "Change Email");
+                model.addAttribute("currentEmail", thisUser.getEmail());
+                model.addAttribute("emailError", "Email is already taken!");
+
+                return "user/email";
+            }
+        }
+
+        thisUser.setEmail(newEmail);
+        userDao.save(thisUser);
+        return "redirect:/user";
+    }
+
     @RequestMapping(value = "/*", method = RequestMethod.POST, params = {"logout"})
     public String logout1(HttpServletResponse response) {
         Cookie logoutCookie = new Cookie("loggedInCookie", "");

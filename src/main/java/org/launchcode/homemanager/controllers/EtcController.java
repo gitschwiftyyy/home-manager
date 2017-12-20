@@ -46,11 +46,4 @@ public class EtcController {
         return "redirect:/budget";
     }
 
-    @RequestMapping(value = "/budget/{year}/{month}/etc", method = RequestMethod.POST, params = {"logout"})
-    public String logoutEtc(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
 }

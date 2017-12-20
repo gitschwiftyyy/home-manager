@@ -47,11 +47,4 @@ public class ElectricController {
         return "redirect:/budget";
     }
 
-    @RequestMapping(value = "/budget/{year}/{month}/electric", method = RequestMethod.POST, params = {"logout"})
-    public String logoutElectric(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
 }

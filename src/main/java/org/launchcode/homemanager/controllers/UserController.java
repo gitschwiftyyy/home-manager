@@ -29,8 +29,6 @@ public class UserController {
     public String displayLogin(Model model,
                                HttpServletResponse response) {
         model.addAttribute("title", "Login");
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        response.addCookie(logoutCookie);
 
         return "user/login";
     }
@@ -202,6 +200,54 @@ public class UserController {
         return "redirect:/user";
     }
 
+    @RequestMapping(value = "password", method = RequestMethod.GET)
+    public String displayUpdatePassword (Model model) {
+
+        model.addAttribute("title", "Change Password");
+        model.addAttribute("passwordCheck", "true");
+
+        return "user/password";
+    }
+
+    @RequestMapping(value = "password", method = RequestMethod.POST, params = {"passwordCheck"})
+    public String processPasswordCheck (Model model,
+                                         @CookieValue(value = "loggedInCookie") String loggedInUserString,
+                                         @RequestParam String password) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserString));
+        for (User user : userDao.findAll()) {
+            if (BCrypt.checkpw(password, user.getPasswordHash())) {
+                model.addAttribute("title", "Change Password");
+                model.addAttribute("updatePassword", "true");
+                return "user/password";
+            }
+        }
+        model.addAttribute("title", "Change Password");
+        model.addAttribute("passwordCheck", "true");
+        model.addAttribute("passwordError", "Incorrect password!");
+        return "user/password";
+    }
+
+    @RequestMapping(value = "password", method = RequestMethod.POST, params = {"updatePassword"})
+    public String processUpdatePassword (@CookieValue(value = "loggedInCookie") String loggedInUserString,
+                                         @RequestParam String newPassword,
+                                         @RequestParam String newPasswordConfirm,
+                                         Model model) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserString));
+        if (newPassword.equals(newPasswordConfirm)) {
+            String newPasswordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            thisUser.setPasswordHash(newPasswordHash);
+            userDao.save(thisUser);
+            return "redirect:/user";
+        } else {
+            model.addAttribute("title", "Change Password");
+            model.addAttribute("updatePassword", "true");
+            model.addAttribute("passwordError", "Passwords do not match!");
+
+            return "user/password";
+        }
+
+    }
+
     @RequestMapping(value = "email", method = RequestMethod.GET)
     public String displayUpdateEmail (Model model,
                                       @CookieValue(value = "loggedInCookie", required = false) String loggedInUserString) {
@@ -232,21 +278,7 @@ public class UserController {
         return "redirect:/user";
     }
 
-    @RequestMapping(value = "/*", method = RequestMethod.POST, params = {"logout"})
-    public String logout1(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
-
-    @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
-    public String logout(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
+    
 
     public static User getLoggedInUser() {
         return loggedInUser;

@@ -46,11 +46,5 @@ public class RentController {
         return "redirect:/budget/" + year + "/" + month;
     }
 
-    @RequestMapping(value = "/budget/{year}/{month}/rent", method = RequestMethod.POST, params = {"logout"})
-    public String logoutRent(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
+
 }

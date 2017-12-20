@@ -46,11 +46,4 @@ public class InternetController {
         return "redirect:/budget";
     }
 
-    @RequestMapping(value = "/budget/{year}/{month}/internet", method = RequestMethod.POST, params = {"logout"})
-    public String logoutInternet(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
 }

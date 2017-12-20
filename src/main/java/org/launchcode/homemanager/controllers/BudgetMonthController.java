@@ -170,11 +170,4 @@ public class BudgetMonthController {
         return "redirect:/budget/" + year + "/" + month;
     }
 
-    @RequestMapping(value = "/{year}/{month}", method = RequestMethod.POST, params = {"logout"})
-    public String logout(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
 }

@@ -61,11 +61,5 @@ public class TaskController {
         return "redirect:/task";
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST, params = {"logout"})
-    public String logout(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
+
 }

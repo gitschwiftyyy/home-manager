@@ -58,4 +58,12 @@ public class SplashPageController {
 
         return "splashpage";
     }
+
+    @RequestMapping(value = "*", method = RequestMethod.POST, params = {"logout"})
+    public String logout1(HttpServletResponse response) {
+        Cookie logoutCookie = new Cookie("loggedInCookie", "");
+        logoutCookie.setMaxAge(0);
+        response.addCookie(logoutCookie);
+        return "redirect:/user/login";
+    }
 }

@@ -46,11 +46,5 @@ public class GasController {
         return "redirect:/budget";
     }
 
-    @RequestMapping(value = "/budget/{year}/{month}/gas", method = RequestMethod.POST, params = {"logout"})
-    public String logoutGas(HttpServletResponse response) {
-        Cookie logoutCookie = new Cookie("loggedInCookie", "");
-        logoutCookie.setMaxAge(0);
-        response.addCookie(logoutCookie);
-        return "redirect:/user/login";
-    }
+
 }

@@ -278,7 +278,7 @@ public class UserController {
         return "redirect:/user";
     }
 
-    
+
 
     public static User getLoggedInUser() {
         return loggedInUser;

@@ -66,5 +66,4 @@ public class SplashPageController {
         response.addCookie(logoutCookie);
         return "redirect:/user/login";
     }
-    
 }

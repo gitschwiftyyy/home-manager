@@ -1,6 +1,10 @@
 package org.launchcode.homemanager.models;
 
+import org.hibernate.validator.constraints.Email;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +26,15 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Payment> payments = new ArrayList<>();
 
+    @NotNull
+    @Size(min = 3, max = 15)
     private String name;
+
+    @NotNull
     private String passwordHash;
+
+    @NotNull
+    @Email
     private String email;
 
     public User(String name, String passwordHash, String email) {

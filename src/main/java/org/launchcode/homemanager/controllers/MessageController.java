@@ -1,6 +1,5 @@
 package org.launchcode.homemanager.controllers;
 
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.launchcode.homemanager.models.BudgetMonth;
 import org.launchcode.homemanager.models.Message;
 import org.launchcode.homemanager.models.User;
@@ -8,12 +7,12 @@ import org.launchcode.homemanager.models.data.BudgetMonthDao;
 import org.launchcode.homemanager.models.data.MessageDao;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by schwifty on 11/10/17.
@@ -30,6 +29,10 @@ public class MessageController {
 
     @Autowired
     private BudgetMonthDao budgetMonthDao;
+
+    @Autowired
+    private MailSender mailSender;
+
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayMessages(Model model,
@@ -61,7 +64,14 @@ public class MessageController {
         newMessage.setAuthor(thisUser);
 
         messageDao.save(newMessage);
+        String fromEmail = "home.manager.test.1@gmail.com";
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setFrom(fromEmail);
+        email.setTo(thisUser.getEmail());
+        email.setSubject("New Home Manager message from " + newMessage.getAuthor().getName());
+        email.setText(newMessage.getMessage());
 
+        mailSender.send(email);
         return "redirect:/messages";
     }
 

@@ -3,6 +3,7 @@ package org.launchcode.homemanager.controllers;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,6 @@ public class UserController {
 
     @Autowired
     private UserDao userDao;
-
 
 
     @RequestMapping(value = "login", method = RequestMethod.GET)

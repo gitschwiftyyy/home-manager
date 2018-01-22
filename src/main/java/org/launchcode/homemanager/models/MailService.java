@@ -28,7 +28,7 @@ public class MailService {
         return userEmails;
     }
 
-    public void send(String subject, String text) {
+    public void sendToAll(String subject, String text) {
         SimpleMailMessage email = new SimpleMailMessage();
         String[] toEmails = findEmails();
         email.setTo(toEmails);
@@ -38,7 +38,7 @@ public class MailService {
         mailSender.send(email);
     }
 
-    public void send(User user, String subject, String text) {
+    public void sendToOne(User user, String subject, String text) {
         SimpleMailMessage email = new SimpleMailMessage();
         String to = user.getEmail();
         email.setTo(to);

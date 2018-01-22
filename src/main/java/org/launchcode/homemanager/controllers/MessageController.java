@@ -1,6 +1,7 @@
 package org.launchcode.homemanager.controllers;
 
 import org.launchcode.homemanager.models.BudgetMonth;
+import org.launchcode.homemanager.models.MailService;
 import org.launchcode.homemanager.models.Message;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.BudgetMonthDao;
@@ -33,8 +34,11 @@ public class MessageController {
     @Autowired
     private BudgetMonthDao budgetMonthDao;
 
+//    @Autowired
+//    private MailSender mailSender;
+
     @Autowired
-    private MailSender mailSender;
+    private MailService mailService;
 
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -67,17 +71,21 @@ public class MessageController {
         newMessage.setAuthor(thisUser);
 
         messageDao.save(newMessage);
-        SimpleMailMessage email = new SimpleMailMessage();
-        List<String> users = new ArrayList();
-        for (User user : userDao.findAll()) {
-            users.add(user.getEmail());
-        }
-        String[] usersEmails = users.toArray(new String[users.size()]);
-        email.setTo(usersEmails);
-        email.setSubject("New Home Manager message from " + newMessage.getAuthor().getName());
-        email.setText(newMessage.getMessage());
+//        SimpleMailMessage email = new SimpleMailMessage();
+//        List<String> users = new ArrayList();
+//        for (User user : userDao.findAll()) {
+//            users.add(user.getEmail());
+//        }
+//        String[] usersEmails = users.toArray(new String[users.size()]);
+//        email.setTo(usersEmails);
+//        email.setSubject("New Home Manager message from " + newMessage.getAuthor().getName());
+//        email.setText(newMessage.getMessage());
+//
+//        mailSender.send(email);
 
-        mailSender.send(email);
+        String subject = "New Home Manager message from " + newMessage.getAuthor().getName();
+        String text = newMessage.getMessage();
+        mailService.sendToAll(subject, text);
         return "redirect:/messages";
     }
 

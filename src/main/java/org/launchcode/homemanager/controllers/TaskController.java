@@ -1,6 +1,7 @@
 package org.launchcode.homemanager.controllers;
 
 import org.launchcode.homemanager.models.BudgetMonth;
+import org.launchcode.homemanager.models.MailService;
 import org.launchcode.homemanager.models.Task;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.BudgetMonthDao;
@@ -38,7 +39,7 @@ public class TaskController {
     private BudgetMonthDao budgetMonthDao;
 
     @Autowired
-    private MailSender mailSender;
+    private MailService mailService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model,
@@ -67,19 +68,10 @@ public class TaskController {
                                      @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
         User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
         taskDao.save(newTask);
-
-
-        SimpleMailMessage email = new SimpleMailMessage();
-        List<String> users = new ArrayList();
-        for (User user : userDao.findAll()) {
-            users.add(user.getEmail());
-        }
-        String[] usersEmails = users.toArray(new String[users.size()]);
-        email.setTo(usersEmails);
-        email.setSubject("Home Manager Task List Updated");
-        email.setText(thisUser.getName() + " added " + newTask.getName() + " to the task list");
-
-        mailSender.send(email);
+        
+        String emailSubject = "Home Manager Task List Updated";
+        String emailText = thisUser.getName() + " added " + newTask.getName() + " to the task list";
+        mailService.sendToAll(emailSubject, emailText);
 
         return "redirect:/task";
     }

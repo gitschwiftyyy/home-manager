@@ -1,5 +1,6 @@
 package org.launchcode.homemanager.controllers;
 
+import org.launchcode.homemanager.models.MailService;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private MailService mailService;
 
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
@@ -130,11 +134,20 @@ public class UserController {
         }
 
         if (!usernameTaken && passwordsMatch && !emailTaken) {
+            String emailSubject = "New Home Manager User";
+            String emailText = username + " has joined Home Manager!";
+            mailService.sendToAll(emailSubject, emailText);
+
             newUser.setName(username);
             newUser.setPasswordHash(passwordHash);
             newUser.setEmail(email);
             userDao.save(newUser);
 
+            UserController.setLoggedInUser(newUser);
+
+            String emailSubject1 = "Home Manager Registration";
+            String emailText1 = "Thanks for signing up with Home Manager, " + newUser.getName() + ". Welcome aboard!";
+            mailService.sendToOne(newUser, emailSubject1, emailText1);
             return "redirect:/";
         } else {
             if (passwordsMatch) {

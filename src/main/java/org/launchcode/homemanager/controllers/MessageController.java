@@ -34,9 +34,6 @@ public class MessageController {
     @Autowired
     private BudgetMonthDao budgetMonthDao;
 
-//    @Autowired
-//    private MailSender mailSender;
-
     @Autowired
     private MailService mailService;
 
@@ -71,17 +68,6 @@ public class MessageController {
         newMessage.setAuthor(thisUser);
 
         messageDao.save(newMessage);
-//        SimpleMailMessage email = new SimpleMailMessage();
-//        List<String> users = new ArrayList();
-//        for (User user : userDao.findAll()) {
-//            users.add(user.getEmail());
-//        }
-//        String[] usersEmails = users.toArray(new String[users.size()]);
-//        email.setTo(usersEmails);
-//        email.setSubject("New Home Manager message from " + newMessage.getAuthor().getName());
-//        email.setText(newMessage.getMessage());
-//
-//        mailSender.send(email);
 
         String subject = "New Home Manager message from " + newMessage.getAuthor().getName();
         String text = newMessage.getMessage();

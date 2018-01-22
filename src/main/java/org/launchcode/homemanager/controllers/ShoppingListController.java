@@ -2,6 +2,7 @@ package org.launchcode.homemanager.controllers;
 
 import org.launchcode.homemanager.models.BudgetMonth;
 import org.launchcode.homemanager.models.ListItem;
+import org.launchcode.homemanager.models.MailService;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.BudgetMonthDao;
 import org.launchcode.homemanager.models.data.ListItemDao;
@@ -35,7 +36,7 @@ public class ShoppingListController {
     private BudgetMonthDao budgetMonthDao;
 
     @Autowired
-    private MailSender mailSender;
+    private MailService mailService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayShoppingList (Model model,
@@ -66,17 +67,9 @@ public class ShoppingListController {
         User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
         listItemDao.save(newListItem);
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        List<String> users = new ArrayList();
-        for (User user : userDao.findAll()) {
-            users.add(user.getEmail());
-        }
-        String[] usersEmails = users.toArray(new String[users.size()]);
-        email.setTo(usersEmails);
-        email.setSubject("Home Manager Shopping List Updated");
-        email.setText(thisUser.getName() + " added " + newListItem.getContent() + " to the shopping list");
-
-        mailSender.send(email);
+        String emailSubject = "Home Manager Shopping List Updated";
+        String emailText = thisUser.getName() + " added " + newListItem.getContent() + " to the shopping list";
+        mailService.sendToAll(emailSubject, emailText);
 
         return "redirect:/shopping-list";
 
@@ -90,17 +83,9 @@ public class ShoppingListController {
         ListItem itemToBeDeleted = listItemDao.findOne(itemId);
         listItemDao.delete(itemToBeDeleted);
 
-        SimpleMailMessage email = new SimpleMailMessage();
-        List<String> users = new ArrayList();
-        for (User user : userDao.findAll()) {
-            users.add(user.getEmail());
-        }
-        String[] usersEmails = users.toArray(new String[users.size()]);
-        email.setTo(usersEmails);
-        email.setSubject("Home Manager Shopping List Updated");
-        email.setText(thisUser.getName() + " bought " + itemToBeDeleted.getContent() + " from the shopping list");
-
-        mailSender.send(email);
+        String emailSubject = "Home Manager Shopping List Updated";
+        String emailText = thisUser.getName() + " bought " + itemToBeDeleted.getContent() + " from the shopping list";
+        mailService.sendToAll(emailSubject, emailText);
         return "redirect:/shopping-list";
     }
 

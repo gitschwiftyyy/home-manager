@@ -7,6 +7,8 @@ import org.launchcode.homemanager.models.data.BudgetMonthDao;
 import org.launchcode.homemanager.models.data.TaskDao;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwifty on 11/6/17.
@@ -32,6 +36,9 @@ public class TaskController {
 
     @Autowired
     private BudgetMonthDao budgetMonthDao;
+
+    @Autowired
+    private MailSender mailSender;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayAddTaskForm(Model model,
@@ -56,8 +63,24 @@ public class TaskController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"postTask"})
-    public String processAddTaskForm(@ModelAttribute Task newTask, Model model) {
+    public String processAddTaskForm(@ModelAttribute Task newTask, Model model,
+                                     @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
         taskDao.save(newTask);
+
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        List<String> users = new ArrayList();
+        for (User user : userDao.findAll()) {
+            users.add(user.getEmail());
+        }
+        String[] usersEmails = users.toArray(new String[users.size()]);
+        email.setTo(usersEmails);
+        email.setSubject("Home Manager Task List Updated");
+        email.setText(thisUser.getName() + " added " + newTask.getName() + " to the task list");
+
+        mailSender.send(email);
+
         return "redirect:/task";
     }
 

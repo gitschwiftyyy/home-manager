@@ -7,6 +7,8 @@ import org.launchcode.homemanager.models.Payment;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -19,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Array;
 import java.text.Format;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by schwifty on 10/28/17.
@@ -44,6 +48,9 @@ public class IndexController {
 
     @Autowired
     private PaymentDao paymentDao;
+
+    @Autowired
+    private MailSender mailSender;
 
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -88,9 +95,24 @@ public class IndexController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, params = {"deleteListItem"})
-    public String deleteListItem(@RequestParam int itemId) {
+    public String deleteListItem(@RequestParam int itemId,
+                                 @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        User thisUser = userDao.findOne(Integer.parseInt(loggedInUserId));
+
         ListItem itemToBeDeleted = listItemDao.findOne(itemId);
         listItemDao.delete(itemToBeDeleted);
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        List<String> users = new ArrayList();
+        for (User user : userDao.findAll()) {
+            users.add(user.getEmail());
+        }
+        String[] usersEmails = users.toArray(new String[users.size()]);
+        email.setTo(usersEmails);
+        email.setSubject("Home Manager Shopping List Updated");
+        email.setText(thisUser.getName() + " bought " + itemToBeDeleted.getContent() + " from the shopping list");
+
+        mailSender.send(email);
 
         return "redirect:";
 

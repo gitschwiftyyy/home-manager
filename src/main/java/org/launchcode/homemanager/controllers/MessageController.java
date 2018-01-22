@@ -13,6 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by schwifty on 11/10/17.
@@ -64,10 +67,13 @@ public class MessageController {
         newMessage.setAuthor(thisUser);
 
         messageDao.save(newMessage);
-        String fromEmail = "home.manager.test.1@gmail.com";
         SimpleMailMessage email = new SimpleMailMessage();
-        email.setFrom(fromEmail);
-        email.setTo(thisUser.getEmail());
+        List<String> users = new ArrayList();
+        for (User user : userDao.findAll()) {
+            users.add(user.getEmail());
+        }
+        String[] usersEmails = users.toArray(new String[users.size()]);
+        email.setTo(usersEmails);
         email.setSubject("New Home Manager message from " + newMessage.getAuthor().getName());
         email.setText(newMessage.getMessage());
 

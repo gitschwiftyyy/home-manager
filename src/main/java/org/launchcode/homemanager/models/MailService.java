@@ -19,7 +19,7 @@ public class MailService {
 
 
     private String[] findEmails () {
-        ArrayList<String> users = new ArrayList();
+        ArrayList<String> users = new ArrayList<>();
         for (User user : userDao.findAll()) {
             users.add(user.getEmail());
         }
@@ -30,8 +30,7 @@ public class MailService {
 
     public void sendToAll(String subject, String text) {
         SimpleMailMessage email = new SimpleMailMessage();
-        String[] toEmails = findEmails();
-        email.setTo(toEmails);
+        email.setTo(findEmails());
         email.setSubject(subject);
         email.setText(text);
 

@@ -60,7 +60,7 @@ public class RentController {
 
 
         String emailSubject = "Budget updated for " + month + " " + year;
-        String emailText = thisUser.getName() + " changed " + month + "'s rent amount to " + formatter.format(updateAmount);
+        String emailText = thisUser.getName() + " updated " + month + "'s rent amount to " + formatter.format(updateAmount);
         mailService.sendToAll(emailSubject, emailText);
 
         return "redirect:/budget/" + year + "/" + month;

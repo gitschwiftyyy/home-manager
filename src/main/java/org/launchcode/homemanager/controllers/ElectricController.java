@@ -59,7 +59,7 @@ public class ElectricController {
         User thisUser = userDao.findOne(userId);
 
         String emailSubject = "Budget updated for " + month + " " + year;
-        String emailText = thisUser.getName() + " changed " + month + "'s electric amount to" + formatter.format(updateAmount);
+        String emailText = thisUser.getName() + " updated " + month + "'s electric amount to " + formatter.format(updateAmount);
         mailService.sendToAll(emailSubject, emailText);
 
         return "redirect:/budget";

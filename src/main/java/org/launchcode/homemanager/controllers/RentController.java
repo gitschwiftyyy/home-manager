@@ -1,7 +1,10 @@
 package org.launchcode.homemanager.controllers;
 
 import org.launchcode.homemanager.models.BudgetMonth;
+import org.launchcode.homemanager.models.MailService;
+import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.BudgetMonthDao;
+import org.launchcode.homemanager.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,12 @@ public class RentController {
 
     @Autowired
     BudgetMonthDao budgetMonthDao;
+
+    @Autowired
+    UserDao userDao;
+
+    @Autowired
+    MailService mailService;
 
     @RequestMapping(value = "/budget/{year}/{month}/rent", method = RequestMethod.GET)
     public String displayRent(Model model,
@@ -38,11 +47,22 @@ public class RentController {
     @RequestMapping(value = "/budget/{year}/{month}/rent", method = RequestMethod.POST, params = {"update"})
     public String processRent(@PathVariable String year,
                               @PathVariable String month,
-                              @RequestParam String updateAmountString) {
+                              @RequestParam String updateAmountString,
+                              @CookieValue(value = "loggedInCookie", required = false) String loggedInUserId) {
+        int userId = Integer.parseInt(loggedInUserId);
+        User thisUser = userDao.findOne(userId);
+
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
         BudgetMonth thisBudgetMonth = budgetMonthDao.findByYearAndMonth(Integer.parseInt(year), BudgetMonth.monthInt(month));
         Double updateAmount = Double.parseDouble(updateAmountString);
         thisBudgetMonth.setRent(updateAmount);
         budgetMonthDao.save(thisBudgetMonth);
+
+
+        String emailSubject = "Budget updated for " + month + " " + year;
+        String emailText = thisUser.getName() + " changed " + month + "'s rent amount to " + formatter.format(updateAmount);
+        mailService.sendToAll(emailSubject, emailText);
+
         return "redirect:/budget/" + year + "/" + month;
     }
 

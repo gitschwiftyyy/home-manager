@@ -1,5 +1,6 @@
 package org.launchcode.homemanager.controllers;
 
+import org.launchcode.homemanager.models.MailService;
 import org.launchcode.homemanager.models.User;
 import org.launchcode.homemanager.models.data.UserDao;
 import org.mindrot.jbcrypt.BCrypt;
@@ -16,6 +17,9 @@ public class EditUserController {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private MailService mailService;
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public String displayUserPage (Model model,
@@ -59,9 +63,15 @@ public class EditUserController {
                 return "user/username";
             }
         }
+        String emailSubject = "Account Update";
+        String emailText = "You changed your username to " + newUsername;
+        mailService.sendToOne(thisUser, emailSubject, emailText);
+        String groupEmailText = thisUser.getName() + " changed their name to " + newUsername;
+        mailService.sendToOthers(thisUser, emailSubject, groupEmailText);
 
         thisUser.setName(newUsername);
         userDao.save(thisUser);
+
         return "redirect:/user";
     }
 

@@ -28,6 +28,17 @@ public class MailService {
         return userEmails;
     }
 
+    private String[] findOthers (User inputUser) {
+        ArrayList<String> others = new ArrayList<>();
+        for (User user : userDao.findAll()) {
+            if (!user.getEmail().equals(inputUser.getEmail())) {
+                others.add(user.getEmail());
+            }
+        }
+        String[] userEmails = others.toArray(new String[others.size()]);
+        return userEmails;
+    }
+
     public void sendToAll(String subject, String text) {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(findEmails());
@@ -41,6 +52,15 @@ public class MailService {
         SimpleMailMessage email = new SimpleMailMessage();
         String to = user.getEmail();
         email.setTo(to);
+        email.setSubject(subject);
+        email.setText(text);
+
+        mailSender.send(email);
+    }
+
+    public void sendToOthers(User user, String subject, String text) {
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(findOthers(user));
         email.setSubject(subject);
         email.setText(text);
 

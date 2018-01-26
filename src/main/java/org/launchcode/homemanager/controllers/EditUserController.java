@@ -63,7 +63,7 @@ public class EditUserController {
                 return "user/username";
             }
         }
-        String emailSubject = "Account Update";
+        String emailSubject = "Home Manager Account Update";
         String emailText = "You changed your username to " + newUsername;
         mailService.sendToOne(thisUser, emailSubject, emailText);
         String groupEmailText = thisUser.getName() + " changed their name to " + newUsername;
@@ -112,6 +112,9 @@ public class EditUserController {
             String newPasswordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt());
             thisUser.setPasswordHash(newPasswordHash);
             userDao.save(thisUser);
+            String emailSubject = "Home Manager Account Update";
+            String emailText = "You updated your password";
+            mailService.sendToOne(thisUser, emailSubject, emailText);
             return "redirect:/user";
         } else {
             model.addAttribute("title", "Change Password");

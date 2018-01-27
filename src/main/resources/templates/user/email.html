@@ -14,6 +14,8 @@
             <label th:for="newEmail">New Email: </label>
             <input type="text" name="newEmail"/>
             <span th:text="${emailError}" class="error"></span>
+            <p>A confirmation email well be sent to your new address. If you don't receive
+            this email, double check that you entered your new email correctly and try again.</p>
             <input type="submit" name="updateEmail" value="Update"/>
         </form>
     </div>

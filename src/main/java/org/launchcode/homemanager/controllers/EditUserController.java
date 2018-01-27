@@ -153,6 +153,10 @@ public class EditUserController {
 
         thisUser.setEmail(newEmail);
         userDao.save(thisUser);
+
+        String emailSubject = "Home Manager Account Update";
+        String emailText = "You updated your email address. Notifications will now be sent to this address";
+        mailService.sendToOne(thisUser, emailSubject, emailText);
         return "redirect:/user";
     }
 }

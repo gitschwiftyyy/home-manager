@@ -17,22 +17,22 @@
     <tr>
         <td>Rent</td>
         <td th:text="${rent}">Rent</td>
-        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + rent}">Update</a> </td>
+        <td><button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${year} + '/' + ${month} + '/' + rent} + '\''">Update</button> </td>
     </tr>
     <tr>
         <td>Electric</td>
         <td th:text="${electric}">Electric</td>
-        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + electric}">Update</a> </td>
+        <td><button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${year} + '/' + ${month} + '/' + electric} + '\''">Update</button> </td>
     </tr>
     <tr>
         <td>Gas</td>
         <td th:text="${gas}">Gas</td>
-        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + gas}">Update</a> </td>
+        <td><button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${year} + '/' + ${month} + '/' + gas} + '\''">Update</button> </td>
     </tr>
     <tr>
         <td>Internet</td>
         <td th:text="${internet}">Internet</td>
-        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + internet}">Update</a> </td>
+        <td><button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${year} + '/' + ${month} + '/' + internet} + '\''">Update</button> </td>
     </tr>
     <!--<tr>-->
         <!--<td>Water</td>-->
@@ -42,7 +42,7 @@
     <tr>
         <td>Etc.</td>
         <td th:text="${etc}">Etc</td>
-        <td><a th:href="@{'/budget/' + ${year} + '/' + ${month} + '/' + etc}">Update</a> </td>
+        <td><button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${year} + '/' + ${month} + '/' + etc} + '\''">Update</button></td>
     </tr>
     <tr>
         <td>Total</td>
@@ -59,9 +59,9 @@
 </table>
 
 <nav>
-    <a th:href="@{'/budget/' + ${prevYear} + '/' + ${prevMonth}}"> Previous Month</a> |
-    <a th:href="@{'/budget/' + ${currentYear} + '/' + ${currentMonth}}">Current Month</a> |
-    <a th:href="@{'/budget/' + ${nextYear} + '/' + ${nextMonth}}">Next Month </a>
+    <button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${prevYear} + '/' + ${prevMonth}} + '\''">Previous Month</button>
+    <button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${currentYear} + '/' + ${currentMonth}} + '\''">Current Month</button>
+    <button type="button" class="btn btn-info" th:onclick="'window.location.href = \'' + @{'/budget/' + ${nextYear} + '/' + ${nextMonth}} + '\''">Next Month</button>
 </nav>
 </div>
 <div class="col-md-6">

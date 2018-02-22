@@ -18,7 +18,7 @@ public class MailService {
     private MailSender mailSender;
 
 
-    private String[] findEmails () {
+    private String[] findAll () {
         ArrayList<String> users = new ArrayList<>();
         for (User user : userDao.findAll()) {
             users.add(user.getEmail());
@@ -41,7 +41,7 @@ public class MailService {
 
     public void sendToAll(String subject, String text) {
         SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(findEmails());
+        email.setTo(findAll());
         email.setSubject(subject);
         email.setText(text);
 
@@ -50,8 +50,7 @@ public class MailService {
 
     public void sendToOne(User user, String subject, String text) {
         SimpleMailMessage email = new SimpleMailMessage();
-        String to = user.getEmail();
-        email.setTo(to);
+        email.setTo(user.getEmail());
         email.setSubject(subject);
         email.setText(text);
 

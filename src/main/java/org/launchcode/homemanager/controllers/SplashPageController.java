@@ -30,7 +30,7 @@ public class SplashPageController {
         }
         String cookieValueString = Integer.toString(UserController.getLoggedInUser().getId());
         Cookie loggedInCookie = new Cookie("loggedInCookie", cookieValueString);
-        loggedInCookie.setMaxAge(24*60*60);
+        loggedInCookie.setMaxAge(60*60);
         response.addCookie(loggedInCookie);
         UserController.setLoggedInUser(null);
 
@@ -65,5 +65,12 @@ public class SplashPageController {
         logoutCookie.setMaxAge(0);
         response.addCookie(logoutCookie);
         return "redirect:/user/login";
+    }
+
+
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    public String test(){
+
+        return "test";
     }
 }

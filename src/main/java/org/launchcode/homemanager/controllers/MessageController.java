@@ -41,13 +41,15 @@ public class MessageController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String displayMessages(Model model,
                                   @CookieValue(value = "thisBudgetMonth", required = false) String thisBudgetMonthId,
-                                  @CookieValue(value = "loggedInCookie", required = false) String loggedInUser) {
-        if (loggedInUser == "" || loggedInUser == null) {
+                                  @CookieValue(value = "loggedInCookie", required = false) String loggedInCookieString) {
+        if (loggedInCookieString == "" || loggedInCookieString == null) {
             return "redirect:/user/login";
         }
         BudgetMonth thisBudgetMonth = budgetMonthDao.findOne(Integer.parseInt(thisBudgetMonthId));
+        User loggedInUser = userDao.findOne(Integer.parseInt(loggedInCookieString));
 
         model.addAttribute("title", "Message Board");
+        model.addAttribute("user", loggedInUser.getName());
         model.addAttribute("messages", messageDao.findAll());
         model.addAttribute("year", Integer.toString(thisBudgetMonth.getYear()));
         model.addAttribute("month", thisBudgetMonth.monthName(thisBudgetMonth.getMonth()));

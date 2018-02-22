@@ -48,7 +48,7 @@
         }
         body {
         font-family: sans-serif;
-        padding-top: 150px;
+        padding-top: 130px;
         }
         .loginHeader {
         text-align: center;
@@ -85,8 +85,10 @@
     </nav>
     <br/>
 </div>
-    <h2 th:text="${title}">Heading</h2>
-    <br/><br/>
+</div>
+<div th:fragment="title">
+    <h2 th:text="${title}">Title</h2>
+    <br/>
 </div>
 </body>
 </html>
